@@ -90,6 +90,14 @@ using MudBlazor;
         {
         }
         #pragma warning restore 1998
+#nullable restore
+#line 41 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\Index.razor"
+      
+    Color _color = Color.Primary;
+
+#line default
+#line hidden
+#nullable disable
     }
 }
 #pragma warning restore 1591

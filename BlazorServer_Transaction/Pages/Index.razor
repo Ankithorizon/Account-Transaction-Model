@@ -1,17 +1,30 @@
 ﻿@page "/"
 
+<style>
+    .subItem {
+        padding-left: 100px;
+    }
+    
+</style>
 <h3>Transaction-Model [using Worker Service@@ Web-API Core]</h3>
 <p></p>
 <MudCard>
     <MudCardContent>
-        <MudText Typo="Typo.h6">Blazor-Server App calling Web-API Core for creating Transactions</MudText>
-        <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-        <MudText Typo="Typo.h6">Web-API Core is running Worker-Service to generate randomly 100 Transactions</MudText>
-        <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-        <MudText Typo="Typo.h6">Blazor-Server App watch[MudBlazor-Table] live Transactions creating by Worker-Service</MudText>
-        <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-        <MudText Typo="Typo.h6">Blazor-Server App display[MudBlazor-Chart] live Transactions creating by Worker-Service</MudText>
-        <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+        <MudList Clickable="false">
+            <MudListItem Text="Blazor-Server-App calls Web-Api Core[Worker-Service] to generate"
+                         InitiallyExpanded="true">
+                <NestedList>
+                    <MudListItem>
+                        <span class="subItem">
+                            - randomly 10-Users, 10-Payees, 30-Accounts and 100-Transactions
+                        </span>
+                    </MudListItem>
+                </NestedList>
+            </MudListItem>
+            <MudListItem>
+                Blazor-Server-App display[Table/Chart] live update from Users, Payees, Accounts and Transactions
+            </MudListItem>
+        </MudList>
     </MudCardContent>
     <MudCardActions>
         <MudElement HtmlTag="a"
@@ -26,8 +39,7 @@
 </MudCard>
 
 @code{
-
-
+    Color _color = Color.Primary;
 }
 
 
