@@ -4,7 +4,10 @@
 
 <p>Current count: @currentCount</p>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<MudButton 
+           @onclick="IncrementCount"
+           Variant="Variant.Filled" 
+           Color="Color.Primary">Click me</MudButton>
 
 @code {
     private int currentCount = 0;

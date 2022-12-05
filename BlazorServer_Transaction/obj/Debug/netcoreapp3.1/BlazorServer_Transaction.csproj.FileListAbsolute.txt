@@ -87,3 +87,5 @@ C:\Transaction-Model\APITransaction\BlazorServer_Transaction\obj\Debug\netcoreap
 C:\Transaction-Model\APITransaction\BlazorServer_Transaction\obj\Debug\netcoreapp3.1\BlazorServer_Transaction.dll
 C:\Transaction-Model\APITransaction\BlazorServer_Transaction\obj\Debug\netcoreapp3.1\BlazorServer_Transaction.pdb
 C:\Transaction-Model\APITransaction\BlazorServer_Transaction\obj\Debug\netcoreapp3.1\BlazorServer_Transaction.genruntimeconfig.cache
+C:\Transaction-Model\APITransaction\BlazorServer_Transaction\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\Transactions.razor.g.cs
+C:\Transaction-Model\APITransaction\BlazorServer_Transaction\obj\Debug\netcoreapp3.1\Razor\Pages\Transactions.razor.g.cs

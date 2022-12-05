@@ -75,6 +75,13 @@ using BlazorServer_Transaction.Shared;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 11 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using MudBlazor;
+
+#line default
+#line hidden
+#nullable disable
     [Microsoft.AspNetCore.Components.RouteAttribute("/counter")]
     public partial class Counter : Microsoft.AspNetCore.Components.ComponentBase
     {
@@ -84,7 +91,7 @@ using BlazorServer_Transaction.Shared;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 9 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\Counter.razor"
+#line 12 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\Counter.razor"
        
     private int currentCount = 0;
 

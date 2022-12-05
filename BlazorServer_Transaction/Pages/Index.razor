@@ -1,7 +1,35 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+<h3>Transaction-Model [using Worker Service@@ Web-API Core]</h3>
+<p></p>
+<MudCard>
+    <MudCardContent>
+        <MudText Typo="Typo.h6">Blazor-Server App calling Web-API Core for creating Transactions</MudText>
+        <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+        <MudText Typo="Typo.h6">Web-API Core is running Worker-Service to generate randomly 100 Transactions</MudText>
+        <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+        <MudText Typo="Typo.h6">Blazor-Server App watch[MudBlazor-Table] live Transactions creating by Worker-Service</MudText>
+        <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+        <MudText Typo="Typo.h6">Blazor-Server App display[MudBlazor-Chart] live Transactions creating by Worker-Service</MudText>
+        <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+    </MudCardContent>
+    <MudCardActions>
+        <MudElement HtmlTag="a"
+                    Class="ma-0"
+                    Style="color:red;font-weight:bold;"
+                    href="https://github.com/Ankithorizon/Transaction-Model-Blazor-WorkerThread"
+                    target="blank"
+                    rel="noopener noreferrer">
+            Source-Code
+        </MudElement>
+    </MudCardActions>
+</MudCard>
 
-Welcome to your new app.
+@code{
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+
+}
+
+
+
+

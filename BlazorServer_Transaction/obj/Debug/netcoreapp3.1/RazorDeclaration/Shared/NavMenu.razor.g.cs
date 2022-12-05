@@ -75,6 +75,13 @@ using BlazorServer_Transaction.Shared;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 11 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using MudBlazor;
+
+#line default
+#line hidden
+#nullable disable
     public partial class NavMenu : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
@@ -83,7 +90,7 @@ using BlazorServer_Transaction.Shared;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 28 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Shared\NavMenu.razor"
+#line 37 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Shared\NavMenu.razor"
        
     private bool collapseNavMenu = true;
 

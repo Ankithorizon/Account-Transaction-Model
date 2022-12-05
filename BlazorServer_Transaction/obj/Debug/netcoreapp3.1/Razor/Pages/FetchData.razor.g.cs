@@ -73,6 +73,13 @@ using BlazorServer_Transaction.Shared;
 #line hidden
 #nullable disable
 #nullable restore
+#line 11 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using MudBlazor;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
 #line 3 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\FetchData.razor"
 using BlazorServer_Transaction.Data;
 
