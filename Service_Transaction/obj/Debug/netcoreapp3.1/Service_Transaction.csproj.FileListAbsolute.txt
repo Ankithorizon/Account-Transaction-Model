@@ -1,0 +1,9 @@
+C:\Transaction-Model\APITransaction\Service_Transaction\bin\Debug\netcoreapp3.1\Service_Transaction.deps.json
+C:\Transaction-Model\APITransaction\Service_Transaction\bin\Debug\netcoreapp3.1\Service_Transaction.dll
+C:\Transaction-Model\APITransaction\Service_Transaction\bin\Debug\netcoreapp3.1\Service_Transaction.pdb
+C:\Transaction-Model\APITransaction\Service_Transaction\obj\Debug\netcoreapp3.1\Service_Transaction.csproj.AssemblyReference.cache
+C:\Transaction-Model\APITransaction\Service_Transaction\obj\Debug\netcoreapp3.1\Service_Transaction.AssemblyInfoInputs.cache
+C:\Transaction-Model\APITransaction\Service_Transaction\obj\Debug\netcoreapp3.1\Service_Transaction.AssemblyInfo.cs
+C:\Transaction-Model\APITransaction\Service_Transaction\obj\Debug\netcoreapp3.1\Service_Transaction.csproj.CoreCompileInputs.cache
+C:\Transaction-Model\APITransaction\Service_Transaction\obj\Debug\netcoreapp3.1\Service_Transaction.dll
+C:\Transaction-Model\APITransaction\Service_Transaction\obj\Debug\netcoreapp3.1\Service_Transaction.pdb
