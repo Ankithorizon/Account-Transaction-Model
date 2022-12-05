@@ -1,0 +1,3 @@
+﻿Add-Migration db-create -context EFCore_Transaction.Context.ApplicationDbContext -OutputDir Migrations
+update-database -context EFCore_Transaction.Context.ApplicationDbContext
+
