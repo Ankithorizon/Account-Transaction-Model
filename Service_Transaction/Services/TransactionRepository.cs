@@ -6,10 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Service_Transaction.Services
 {
-    class TransactionRepository : ITransactionRepository
+    public class TransactionRepository : ITransactionRepository
     {
         private readonly ApplicationDbContext appDbContext;
 
@@ -18,15 +19,11 @@ namespace Service_Transaction.Services
             this.appDbContext = appDbContext;
         }
 
-        public IEnumerable<Transaction> GetAllTransactions()
+        public async Task<List<Transaction>> GetAllTransactions()
         {
-            List<Transaction> transactions = new List<Transaction>();
-            var transactionsDb = appDbContext.Transactions;
-            if (transactionsDb != null && transactionsDb.Count() > 0)
-                return transactionsDb;
-            else
-                return transactions;
+            return await appDbContext.Transactions.ToListAsync();
         }
+
 
         public Transaction AddTransaction(Transaction transaction)
         {

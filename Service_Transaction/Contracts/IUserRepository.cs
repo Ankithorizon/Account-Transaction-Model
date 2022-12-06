@@ -2,12 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Service_Transaction.Contracts
 {
     public interface IUserRepository
     {
-        IEnumerable<User> GetAllUsers();
+        Task<List<User>> GetAllUsers();
         User AddUser(User user);
         User GetUser(int userId);
     }

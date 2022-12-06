@@ -2,12 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Service_Transaction.Contracts
 {
     public interface ITransactionRepository
     {
-        IEnumerable<Transaction> GetAllTransactions();
+        Task<List<Transaction>> GetAllTransactions();
         Transaction AddTransaction(Transaction transaction);
         Transaction GetTransaction(int transactionId);
     }

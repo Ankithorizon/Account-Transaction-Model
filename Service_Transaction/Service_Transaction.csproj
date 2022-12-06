@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\EFCore_Transaction\EFCore_Transaction.csproj" />
   </ItemGroup>
 

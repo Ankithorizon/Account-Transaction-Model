@@ -2,12 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Service_Transaction.Contracts
 {
     public interface IAccountRepository
     {
-        IEnumerable<Account> GetAllAccounts();
+        Task<List<Account>> GetAllAccounts();
         Account AddAccount(Account account);
         Account GetAccount(int accountId);
         List<string> GetAllAccountTypes();

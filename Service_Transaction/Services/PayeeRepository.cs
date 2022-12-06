@@ -6,10 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Service_Transaction.Services
 {
-    class PayeeRepository : IPayeeRepository
+    public class PayeeRepository : IPayeeRepository
     {
         private readonly ApplicationDbContext appDbContext;
 
@@ -18,15 +19,11 @@ namespace Service_Transaction.Services
             this.appDbContext = appDbContext;
         }
 
-        public IEnumerable<Payee> GetAllPayees()
+        public async Task<List<Payee>> GetAllPayees()
         {
-            List<Payee> payees = new List<Payee>();
-            var payeesDb = appDbContext.Payees;
-            if (payeesDb != null && payeesDb.Count() > 0)
-                return payeesDb;
-            else
-                return payees;
+            return await appDbContext.Payees.ToListAsync();
         }
+
 
         public Payee AddPayee(Payee payee)
         {

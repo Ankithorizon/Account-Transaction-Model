@@ -1,3 +1,7 @@
+using APITransaction.AccountProcess;
+using APITransaction.PayeeProcess;
+using APITransaction.TransactionProcess;
+using APITransaction.UserProcess;
 using EFCore_Transaction.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Service_Transaction.Contracts;
+using Service_Transaction.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +41,26 @@ namespace APITransaction
                       Configuration.GetConnectionString("TransactionModelDB"),
                       b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
             #endregion
+
+            // user
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IUserWorker, UserWorker>();
+            services.AddTransient<UserWorkerService>();
+
+            // account
+            services.AddTransient<IAccountRepository, AccountRepository>();
+            services.AddTransient<IAccountWorker, AccountWorker>();
+            services.AddTransient<AccountWorkerService>();
+
+            // payee
+            services.AddTransient<IPayeeRepository, PayeeRepository>();
+            services.AddTransient<IPayeeWorker, PayeeWorker>();
+            services.AddTransient<PayeeWorkerService>();
+
+            // transaction
+            services.AddTransient<ITransactionRepository, TransactionRepository>();
+            services.AddTransient<ITransactionWorker, TransactionWorker>();
+            services.AddTransient<TransactionWorkerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

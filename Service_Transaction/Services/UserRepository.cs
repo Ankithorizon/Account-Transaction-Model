@@ -6,10 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Service_Transaction.Services
 {
-    class UserRepository : IUserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly ApplicationDbContext appDbContext;
 
@@ -18,14 +19,9 @@ namespace Service_Transaction.Services
             this.appDbContext = appDbContext;
         }
 
-        public IEnumerable<User> GetAllUsers()
+        public async Task<List<User>> GetAllUsers()
         {
-            List<User> users = new List<User>();
-            var usersDb = appDbContext.Users.Include(x => x.Accounts);
-            if (usersDb != null && usersDb.Count() > 0)
-                return usersDb;
-            else
-                return users;
+            return await appDbContext.Users.ToListAsync();
         }
 
         public User AddUser(User user)

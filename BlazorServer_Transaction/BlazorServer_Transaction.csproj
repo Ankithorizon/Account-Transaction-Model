@@ -20,8 +20,4 @@
     <ProjectReference Include="..\Service_Transaction\Service_Transaction.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ApiCallHelpers\" />
-  </ItemGroup>
-
 </Project>
