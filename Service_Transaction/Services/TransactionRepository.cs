@@ -30,9 +30,16 @@ namespace Service_Transaction.Services
 
         public Transaction AddTransaction(Transaction transaction)
         {
-            var result = appDbContext.Transactions.Add(transaction);
-            appDbContext.SaveChanges();
-            return result.Entity;
+            try
+            {
+                var result = appDbContext.Transactions.Add(transaction);
+                appDbContext.SaveChanges();
+                return result.Entity;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }     
         }
 
         public Transaction GetTransaction(int transactionId)

@@ -21,6 +21,6 @@ namespace EFCore_Transaction.Models
         public string PayeeACNumber { get; set; }
 
         [Required(ErrorMessage = "Payee Type Is Required!")]
-        public string PayeeType { get; set; }
+        public int PayeeType { get; set; }
     }
 }

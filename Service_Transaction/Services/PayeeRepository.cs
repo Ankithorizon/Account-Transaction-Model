@@ -30,9 +30,16 @@ namespace Service_Transaction.Services
 
         public Payee AddPayee(Payee payee)
         {
-            var result = appDbContext.Payees.Add(payee);
-            appDbContext.SaveChanges();
-            return result.Entity;
+            try
+            {
+                var result = appDbContext.Payees.Add(payee);
+                appDbContext.SaveChanges();
+                return result.Entity;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }        
         }
 
         public Payee GetPayee(int payeeId)

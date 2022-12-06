@@ -18,11 +18,5 @@
     <ProjectReference Include="..\Service_Transaction\Service_Transaction.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="AccountProcess\" />
-    <Folder Include="TransactionProcess\" />
-    <Folder Include="PayeeProcess\" />
-  </ItemGroup>
-
 
 </Project>

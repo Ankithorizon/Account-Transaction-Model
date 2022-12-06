@@ -30,9 +30,16 @@ namespace Service_Transaction.Services
 
         public Account AddAccount(Account account)
         {
-            var result = appDbContext.Accounts.Add(account);
-            appDbContext.SaveChanges();
-            return result.Entity;
+            try
+            {
+                var result = appDbContext.Accounts.Add(account);
+                appDbContext.SaveChanges();
+                return result.Entity;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }        
         }
 
         public Account GetAccount(int accountId)
