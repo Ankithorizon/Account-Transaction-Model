@@ -83,13 +83,55 @@
 <p></p>
 
 
+<MudPaper Square="true" Class="d-flex justify-space-around">
+    <!-- users -->
+    <MudTable Items="@users"
+              @ref="table"      
+              Breakpoint="Breakpoint.Sm"
+              MultiSelection="true"
+              Hover="@hover">
+        <HeaderContent>
+            <MudTh>#</MudTh>
+            <MudTh>User Name</MudTh>
+            <MudTh>Email</MudTh>
+            <MudTh>Phone</MudTh>
+            <MudTh>Home Address</MudTh>
+            <MudTh>Mail Address</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="UserId">@context.UserId</MudTd>
+            <MudTd DataLabel="UserName">@context.UserName</MudTd>
+            <MudTd DataLabel="Email">@context.Email</MudTd>
+            <MudTd DataLabel="Phone">@context.Phone</MudTd>
+            <MudTd DataLabel="HomeAddress">@context.HomeAddress</MudTd>
+            <MudTd DataLabel="MailAddress">@context.MailAddress</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+</MudPaper>
 
 
 @code {
 
+    private bool hover = true;
+
+    // very first load of table for users,,, displays number of rows
+    // in table
+    // @ref="table" code in table configuration
+    private MudTable<User> table;
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        table.SetRowsPerPage(5);
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
     // response from background-worker-process
     private BKProcessResponse BKP_Response_DB = new BKProcessResponse();
     private BKProcessResponse BKP_Response_CSVFile = new BKProcessResponse();
+
+    private List<User> users = new List<User>();
 
     // add users to db
     // call worker-process
@@ -101,7 +143,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-       
+        // call to api-user-controller
+        // this user-controller[api-worker-service-controller],,,
+        // next uses user-repository[data-access-service] to access database
+        users = await userApi.GetUsersAsync();
     }
 
 }

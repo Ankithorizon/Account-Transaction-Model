@@ -105,12 +105,26 @@ using Service_Transaction.DTO;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 88 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_UserMgr.razor"
+#line 116 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_UserMgr.razor"
        
+
+    private bool hover = true;
+
+    // very first load of table for users,,, displays number of rows
+    // in table
+    // @ref="table" code in table configuration
+    private MudTable<User> table;
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        table.SetRowsPerPage(5);
+        return base.OnAfterRenderAsync(firstRender);
+    }
 
     // response from background-worker-process
     private BKProcessResponse BKP_Response_DB = new BKProcessResponse();
     private BKProcessResponse BKP_Response_CSVFile = new BKProcessResponse();
+
+    private List<User> users = new List<User>();
 
     // add users to db
     // call worker-process
@@ -122,7 +136,10 @@ using Service_Transaction.DTO;
 
     protected override async Task OnInitializedAsync()
     {
-       
+        // call to api-user-controller
+        // this user-controller[api-worker-service-controller],,,
+        // next uses user-repository[data-access-service] to access database
+        users = await userApi.GetUsersAsync();
     }
 
 

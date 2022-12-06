@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using EFCore_Transaction.Models;
+using Newtonsoft.Json;
 using Service_Transaction.DTO;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,27 @@ namespace BlazorServer_Transaction.ApiCallHelpers
             }
 
             return new BKProcessResponse();
+        }
+
+        public async Task<List<User>?> GetUsersAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("https://localhost:44339/api/user/get_users");
+                response.EnsureSuccessStatusCode();
+                string data = await response.Content.ReadAsStringAsync();
+                // this one doesn't work                
+                // return JsonSerializer.Deserialize<List<User>>(data);
+
+                // use Newtonsoft.Json package
+                return JsonConvert.DeserializeObject<List<User>>(data);
+            }
+            catch (Exception ex)
+            {
+                // Log and notify user
+            }
+
+            return new List<User>();
         }
     }
 }
