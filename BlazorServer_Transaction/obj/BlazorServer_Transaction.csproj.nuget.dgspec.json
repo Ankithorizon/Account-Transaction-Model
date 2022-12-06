@@ -194,7 +194,11 @@
         "frameworks": {
           "netcoreapp3.1": {
             "targetAlias": "netcoreapp3.1",
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\Transaction-Model\\APITransaction\\EFCore_Transaction\\EFCore_Transaction.csproj": {
+                "projectPath": "C:\\Transaction-Model\\APITransaction\\EFCore_Transaction\\EFCore_Transaction.csproj"
+              }
+            }
           }
         },
         "warningProperties": {

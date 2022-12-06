@@ -1134,6 +1134,9 @@
         }
       },
       "Service_Transaction/1.0.0": {
+        "dependencies": {
+          "EFCore_Transaction": "1.0.0"
+        },
         "runtime": {
           "Service_Transaction.dll": {}
         },

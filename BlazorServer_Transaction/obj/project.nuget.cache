@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "m0glNS+6HM3WotdbgZsJ4EJQSBm8Ip6KJEQJUSmUJzrOh1HGXMkv9FyUbqWQeeeeH7XrC+JcbB78v14MqAHPGg==",
+  "dgSpecHash": "Z8r+0Fpuhc9gC/4hff6iMTFkmS7fcEcK4P+UYRQcQlt3/549oH4KsCGKrWYtme1wjZfdvt3ma4poFApnCU5vnQ==",
   "success": true,
   "projectFilePath": "C:\\Transaction-Model\\APITransaction\\BlazorServer_Transaction\\BlazorServer_Transaction.csproj",
   "expectedPackageFiles": [

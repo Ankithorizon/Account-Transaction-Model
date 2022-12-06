@@ -7,3 +7,6 @@ C:\Transaction-Model\APITransaction\Service_Transaction\obj\Debug\netcoreapp3.1\
 C:\Transaction-Model\APITransaction\Service_Transaction\obj\Debug\netcoreapp3.1\Service_Transaction.csproj.CoreCompileInputs.cache
 C:\Transaction-Model\APITransaction\Service_Transaction\obj\Debug\netcoreapp3.1\Service_Transaction.dll
 C:\Transaction-Model\APITransaction\Service_Transaction\obj\Debug\netcoreapp3.1\Service_Transaction.pdb
+C:\Transaction-Model\APITransaction\Service_Transaction\bin\Debug\netcoreapp3.1\EFCore_Transaction.dll
+C:\Transaction-Model\APITransaction\Service_Transaction\bin\Debug\netcoreapp3.1\EFCore_Transaction.pdb
+C:\Transaction-Model\APITransaction\Service_Transaction\obj\Debug\netcoreapp3.1\Service_Transaction.csproj.CopyComplete
