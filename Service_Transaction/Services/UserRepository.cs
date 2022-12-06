@@ -30,9 +30,16 @@ namespace Service_Transaction.Services
 
         public User AddUser(User user)
         {
-            var result = appDbContext.Users.Add(user);
-            appDbContext.SaveChanges();
-            return result.Entity;
+            try
+            {
+                var result = appDbContext.Users.Add(user);
+                appDbContext.SaveChanges();
+                return result.Entity;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }        
         }
 
         public User GetUser(int userId)
