@@ -82,6 +82,20 @@ using MudBlazor;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 6 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_UserMgr.razor"
+using EFCore_Transaction.Models;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 7 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_UserMgr.razor"
+using Service_Transaction.DTO;
+
+#line default
+#line hidden
+#nullable disable
     [Microsoft.AspNetCore.Components.RouteAttribute("/usermgr")]
     public partial class _UserMgr : Microsoft.AspNetCore.Components.ComponentBase
     {
@@ -90,6 +104,34 @@ using MudBlazor;
         {
         }
         #pragma warning restore 1998
+#nullable restore
+#line 88 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_UserMgr.razor"
+       
+
+    // response from background-worker-process
+    private BKProcessResponse BKP_Response_DB = new BKProcessResponse();
+    private BKProcessResponse BKP_Response_CSVFile = new BKProcessResponse();
+
+    // add users to db
+    // call worker-process
+    // via web-api call
+    private async Task CallWorkerProcess_DB()
+    {
+        BKP_Response_DB = await userApi.AddUsersToDB_BackgroundWorkerProcessAsync();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+       
+    }
+
+
+#line default
+#line hidden
+#nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private MudBlazor.ISnackbar snackBar { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private Service_Transaction.Contracts.IUserRepository userService { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private BlazorServer_Transaction.ApiCallHelpers.UserApiClient userApi { get; set; }
     }
 }
 #pragma warning restore 1591

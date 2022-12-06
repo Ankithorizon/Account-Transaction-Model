@@ -1,9 +1,108 @@
 ﻿@page "/usermgr"
+<!-- web api connector -->
+@inject BlazorServer_Transaction.ApiCallHelpers.UserApiClient userApi
+<!-- service project connector -->
+@inject Service_Transaction.Contracts.IUserRepository userService
+@using EFCore_Transaction.Models
+@using Service_Transaction.DTO
+@inject MudBlazor.ISnackbar snackBar
 
-<h1>Create Users!</h1>
+<style>
+    .refreshBtn {
+        font-size: medium;
+        padding: 30px;
+        margin: 10px;
+    }
+
+    .addUsersBtn {
+        font-size: medium;
+        padding: 30px;
+        margin: 10px;
+    }
+
+    .btnHeader {
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        font-size: x-large;
+    }
+
+    .btnDetails {
+        margin-top: 25px;
+        margin-bottom: 50px;
+        font-size: large;
+        color: blue;
+        font-weight: bold;
+        background-color: white;
+        padding: 10px;
+    }
+
+    .bkpResponse {
+        margin-top: 15px;
+        font-size: x-large;
+        color: white;
+        font-weight: bold;
+        background-color: black;
+        padding: 10px;
+    }
+
+    .noData {
+        color: red;
+        font-size: x-large;
+        font-weight: bold;
+    }
+</style>
+<h1>Manage Users!</h1>
+<!-- add users to db by background-worker-process @@ web-api -->
+<div class="container d-flex justify-space-around">
+    <MudButton Class="addUsersBtn"
+               @onclick="@( (x) => CallWorkerProcess_DB())"
+               Variant="Variant.Filled"
+               Color="Color.Tertiary">
+        <span>
+            <span class="oi oi-file btnHeader" aria-hidden="true">
+                Add Users To DataBase
+            </span>
+            <br />
+            <span class="btnDetails">
+                [Blazor App --&gt;&gt; Web API [User-Controller --&gt;&gt; Worker-Service(StartAsync)] ]
+            </span>
+        </span>
+    </MudButton>
+</div>
 <p></p>
-<h1>View Users!</h1>
+<!-- response from db-background-worker-process @@ web-api -->
+<div class="container d-flex justify-space-around">
+    @if (BKP_Response_DB.Response != null)
+    {
+        <div class="container bkpResponse d-flex justify-space-around">
+            @BKP_Response_DB.Response
+        </div>
+    }
+</div>
+<p></p>
+
+
+
 
 @code {
-  
+
+    // response from background-worker-process
+    private BKProcessResponse BKP_Response_DB = new BKProcessResponse();
+    private BKProcessResponse BKP_Response_CSVFile = new BKProcessResponse();
+
+    // add users to db
+    // call worker-process
+    // via web-api call
+    private async Task CallWorkerProcess_DB()
+    {
+        BKP_Response_DB = await userApi.AddUsersToDB_BackgroundWorkerProcessAsync();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+       
+    }
+
 }
+

@@ -1,3 +1,4 @@
+using BlazorServer_Transaction.ApiCallHelpers;
 using BlazorServer_Transaction.Data;
 using EFCore_Transaction.Context;
 using Microsoft.AspNetCore.Builder;
@@ -9,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MudBlazor.Services;
+using Service_Transaction.Contracts;
+using Service_Transaction.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,10 +38,20 @@ namespace BlazorServer_Transaction
 
             services.AddMudServices();
 
+            // call to api-user-controller
+            services.AddHttpClient<UserApiClient>();
+
+
             // application-db-context
             // database
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("TransactionModelDB")));
 
+            
+            // call to services
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IPayeeRepository, PayeeRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
