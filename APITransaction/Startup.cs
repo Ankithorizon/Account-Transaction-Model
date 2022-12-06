@@ -1,4 +1,5 @@
 using APITransaction.AccountProcess;
+using APITransaction.Helpers;
 using APITransaction.PayeeProcess;
 using APITransaction.TransactionProcess;
 using APITransaction.UserProcess;
@@ -41,6 +42,9 @@ namespace APITransaction
                       Configuration.GetConnectionString("TransactionModelDB"),
                       b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
             #endregion
+
+            // helper
+            services.AddTransient<CreateObjectHelper>();
 
             // user
             services.AddTransient<IUserRepository, UserRepository>();

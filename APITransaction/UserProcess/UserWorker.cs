@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EFCore_Transaction.Models;
-
+using APITransaction.Helpers;
 
 namespace APITransaction.UserProcess
 {
@@ -14,11 +14,13 @@ namespace APITransaction.UserProcess
     {
         readonly ILogger<UserWorker> _logger;
         readonly IUserRepository userService;
+        readonly CreateObjectHelper helper;
 
-        public UserWorker(ILogger<UserWorker> logger, IUserRepository userService)
+        public UserWorker(CreateObjectHelper helper, ILogger<UserWorker> logger, IUserRepository userService)
         {
             _logger = logger;
             this.userService = userService;
+            this.helper = helper;
         }    
 
         public async Task AddUsers_BK_Worker_Process(CancellationToken cancellationToken)
@@ -33,11 +35,11 @@ namespace APITransaction.UserProcess
             {
                 if (userService.AddUser(new User()
                 {
-                    Email = "",
-                    HomeAddress = " ",
-                    MailAddress = " ",
-                    Phone = "123-456-7890",
-                    UserName = ""
+                    Email = helper.GetEmail(20),
+                    HomeAddress = helper.GetStreetNumber(4)+"-" + helper.GetStreetName(20)+" "+ helper.GetCityName(10) + " " + helper.GetProvinceName(2) + " " + helper.GetPostalCode(6)  ,
+                    MailAddress = helper.GetStreetNumber(4) + "-" + helper.GetStreetName(20) + " " + helper.GetCityName(10) + " " + helper.GetProvinceName(2) + " " + helper.GetPostalCode(6),
+                    Phone = helper.GetPhone(10),
+                    UserName = helper.GetUserName(10)
                 }) != null)
                 {
                     _logger.LogInformation("New User Added To Database Successfully!");
