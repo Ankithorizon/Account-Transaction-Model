@@ -1,9 +1,151 @@
 ﻿@page "/payeemgr"
+<!-- web api connector -->
+@inject BlazorServer_Transaction.ApiCallHelpers.PayeeApiClient payeeApi
+<!-- service project connector -->
+@inject Service_Transaction.Contracts.IPayeeRepository payeeService
+@using EFCore_Transaction.Models
+@using Service_Transaction.DTO
+@inject MudBlazor.ISnackbar snackBar
 
-<h1>Create Payees!</h1>
+<style>
+    .refreshBtn {
+        font-size: medium;
+        padding: 30px;
+        margin: 10px;
+    }
+
+    .addPayeesBtn {
+        font-size: medium;
+        padding: 30px;
+        margin: 10px;
+    }
+
+    .btnHeader {
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        font-size: x-large;
+    }
+
+    .btnDetails {
+        margin-top: 25px;
+        margin-bottom: 50px;
+        font-size: large;
+        color: blue;
+        font-weight: bold;
+        background-color: white;
+        padding: 10px;
+    }
+
+    .bkpResponse {
+        margin-top: 15px;
+        font-size: x-large;
+        color: white;
+        font-weight: bold;
+        background-color: black;
+        padding: 10px;
+    }
+
+    .noData {
+        color: red;
+        font-size: x-large;
+        font-weight: bold;
+    }
+</style>
+<h1>Manage Payees!</h1>
+<!-- add payees to db by background-worker-process @@ web-api -->
+<div class="container d-flex justify-space-around">
+    <MudButton Class="addPayeesBtn"
+               @onclick="@( (x) => CallWorkerProcess_DB())"
+               Variant="Variant.Filled"
+               Color="Color.Tertiary">
+        <span>
+            <span class="oi oi-file btnHeader" aria-hidden="true">
+                Add Payees To DataBase
+            </span>
+            <br />
+            <span class="btnDetails">
+                [Blazor App --&gt;&gt; Web API [Payee-Controller --&gt;&gt; Worker-Service(StartAsync)] ]
+            </span>
+        </span>
+    </MudButton>
+</div>
 <p></p>
-<h1>View Payees!</h1>
+<!-- response from db-background-worker-process @@ web-api -->
+<div class="container d-flex justify-space-around">
+    @if (BKP_Response_DB.Response != null)
+    {
+        <div class="container bkpResponse d-flex justify-space-around">
+            @BKP_Response_DB.Response
+        </div>
+    }
+</div>
+<p></p>
+
+
+<MudPaper Square="true" Class="d-flex justify-space-around">
+    <!-- payees -->
+    <MudTable Items="@payees"
+              @ref="table"
+              Breakpoint="Breakpoint.Sm"
+              MultiSelection="true"
+              Hover="@hover">
+        <HeaderContent>
+            <MudTh>#</MudTh>
+            <MudTh>Payee Name</MudTh>
+            <MudTh>Description</MudTh>
+            <MudTh>Payee AC Number</MudTh>
+            <MudTh>Payee Type</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="PayeeId">@context.PayeeId</MudTd>
+            <MudTd DataLabel="PayeeName">@context.PayeeName</MudTd>
+            <MudTd DataLabel="Description">@context.Description</MudTd>
+            <MudTd DataLabel="PayeeACNumber">@context.PayeeACNumber</MudTd>
+            <MudTd DataLabel="PayeeType">@context.PayeeType</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+</MudPaper>
+
 
 @code {
-  
+
+    private bool hover = true;
+
+    // very first load of table for payees,,, displays number of rows
+    // in table
+    // @ref="table" code in table configuration
+    private MudTable<Payee> table;
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        table.SetRowsPerPage(5);
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    // response from background-worker-process
+    private BKProcessResponse BKP_Response_DB = new BKProcessResponse();
+    private BKProcessResponse BKP_Response_CSVFile = new BKProcessResponse();
+
+    private List<Payee> payees = new List<Payee>();
+
+    // add payees to db
+    // call worker-process
+    // via web-api call
+    private async Task CallWorkerProcess_DB()
+    {
+        BKP_Response_DB = await payeeApi.AddPayeesToDB_BackgroundWorkerProcessAsync();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // call to api-payee-controller
+        // this payee-controller[api-worker-service-controller],,,
+        // next uses payee-repository[data-access-service] to access database
+        payees = await payeeApi.GetPayeesAsync();
+    }
+
 }
+

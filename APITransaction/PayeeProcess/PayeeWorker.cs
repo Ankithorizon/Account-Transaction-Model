@@ -1,4 +1,5 @@
-﻿using EFCore_Transaction.Models;
+﻿using APITransaction.Helpers;
+using EFCore_Transaction.Models;
 using Microsoft.Extensions.Logging;
 using Service_Transaction.Contracts;
 using System;
@@ -13,11 +14,13 @@ namespace APITransaction.PayeeProcess
     {
         readonly ILogger<PayeeWorker> _logger;
         readonly IPayeeRepository payeeService;
+        readonly CreateObjectHelper helper;
 
-        public PayeeWorker(ILogger<PayeeWorker> logger, IPayeeRepository payeeService)
+        public PayeeWorker(CreateObjectHelper helper, ILogger<PayeeWorker> logger, IPayeeRepository payeeService)
         {
             _logger = logger;
             this.payeeService = payeeService;
+            this.helper = helper;
         }
 
         public async Task AddPayees_BK_Worker_Process(CancellationToken cancellationToken)
@@ -32,10 +35,10 @@ namespace APITransaction.PayeeProcess
             {
                 if (payeeService.AddPayee(new Payee()
                 {
-                   PayeeName = "",
-                    Description = "",
-                     PayeeACNumber = "",
-                      PayeeType = (int)PayeeType.Hydro,
+                   PayeeName = helper.GetPayeeNameDesc(10,5),
+                    Description = helper.GetPayeeNameDesc(10,5),
+                     PayeeACNumber = helper.GetPayeeACNumber(10,5),
+                      PayeeType = (int)helper.GetPayeeType(),
                 }) != null)
                 {
                     _logger.LogInformation("New Payee Added To Database Successfully!");

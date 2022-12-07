@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EFCore_Transaction.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -64,7 +65,7 @@ namespace APITransaction.Helpers
         }
         public string GetCityName(string province)
         {
-            int num = random.Next(1, 3);
+            int num = random.Next(1, 2);
 
             List<string> citiesON = new List<string>();
             citiesON.Add("Toronto");
@@ -97,7 +98,7 @@ namespace APITransaction.Helpers
         }
         public string GetProvinceName()
         {
-            int num = random.Next(1, 4);
+            int num = random.Next(1, 3);
             List<string> provinces = new List<string>();
             provinces.Add("MB");
             provinces.Add("ON");
@@ -112,5 +113,42 @@ namespace APITransaction.Helpers
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
+        // PayeeName
+        // Description
+        public string GetPayeeNameDesc(int sLength, int nLength)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string payee1 = new string(Enumerable.Repeat(chars, sLength)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            const string numbers = "0123456789";
+            string payee2 = new string(Enumerable.Repeat(numbers, nLength)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            return payee1 + "-" + payee2;
+        }
+
+        // PayeeACNumber
+        public string GetPayeeACNumber(int sLength, int nLength)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string payee1 = new string(Enumerable.Repeat(chars, sLength)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            const string numbers = "0123456789";
+            string payee2 = new string(Enumerable.Repeat(numbers, nLength)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            return payee2 + "-" + payee1;
+        }
+
+        // PayeeType
+        public PayeeType GetPayeeType()
+        {
+            Array values = Enum.GetValues(typeof(PayeeType));
+            Random random = new Random();
+            PayeeType randomPayeeType = (PayeeType)values.GetValue(random.Next(values.Length));
+            return randomPayeeType;
+        }
     }
 }
