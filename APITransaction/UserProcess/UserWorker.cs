@@ -33,11 +33,13 @@ namespace APITransaction.UserProcess
             // while (!flag)
             while (count <= 10)
             {
+                var provinceName = helper.GetProvinceName();
+
                 if (userService.AddUser(new User()
                 {
                     Email = helper.GetEmail(20),
-                    HomeAddress = helper.GetStreetNumber(4)+"-" + helper.GetStreetName(20)+" "+ helper.GetCityName(10) + " " + helper.GetProvinceName(2) + " " + helper.GetPostalCode(6)  ,
-                    MailAddress = helper.GetStreetNumber(4) + "-" + helper.GetStreetName(20) + " " + helper.GetCityName(10) + " " + helper.GetProvinceName(2) + " " + helper.GetPostalCode(6),
+                    HomeAddress = helper.GetStreetNumber(4)+"-" + helper.GetStreetName(20)+" "+ helper.GetCityName(provinceName) + " " + provinceName + " " + helper.GetPostalCode(6)  ,
+                    MailAddress = helper.GetStreetNumber(4) + "-" + helper.GetStreetName(20) + " " + helper.GetCityName(provinceName) + " " + provinceName + " " + helper.GetPostalCode(6),
                     Phone = helper.GetPhone(10),
                     UserName = helper.GetUserName(10)
                 }) != null)
