@@ -13,6 +13,7 @@ namespace Service_Transaction.Services
     public class PayeeRepository : IPayeeRepository
     {
         private readonly ApplicationDbContext appDbContext;
+        private static Random random = new Random();
 
         public PayeeRepository(ApplicationDbContext appDbContext)
         {
@@ -52,6 +53,18 @@ namespace Service_Transaction.Services
                 PayeeTypes.Add(PayeeType);
             }
             return PayeeTypes;
+        }
+
+        public int GetRandomPayeeId()
+        {
+            if (appDbContext.Payees != null && appDbContext.Payees.Count() > 0)
+            {
+                int num = random.Next(0, appDbContext.Payees.Count() - 1);
+                return appDbContext.Payees.ToList().ElementAtOrDefault(num).PayeeId;
+            }
+            else
+                return 0;
+
         }
     }
 }
