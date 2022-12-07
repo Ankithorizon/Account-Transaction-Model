@@ -150,5 +150,38 @@ namespace APITransaction.Helpers
             PayeeType randomPayeeType = (PayeeType)values.GetValue(random.Next(values.Length));
             return randomPayeeType;
         }
+    
+    
+        // AccountNumber
+        // 5,3
+        public int GetAccountNumber(int lLength, int rLength)
+        {
+            const string numbers = "0123456789";
+            
+            string leftNumbers = new string(Enumerable.Repeat(numbers, lLength)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            string rightNumbers = new string(Enumerable.Repeat(numbers, rLength)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            return Convert.ToInt32(leftNumbers) + Convert.ToInt32(rightNumbers);
+        }
+        // AccountType
+        public AccountType GetAccountType()
+        {
+            Array values = Enum.GetValues(typeof(AccountType));
+            Random random = new Random();
+            AccountType randomAccountType = (AccountType)values.GetValue(random.Next(values.Length));
+            return randomAccountType;
+        }
+
+        // Balance
+        public decimal GetBalance()
+        {
+            return random.Next(5000, 999999);
+        }
+      
+
+
     }
 }

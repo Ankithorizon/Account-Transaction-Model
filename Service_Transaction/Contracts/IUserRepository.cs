@@ -11,5 +11,6 @@ namespace Service_Transaction.Contracts
         Task<List<User>> GetAllUsers();
         User AddUser(User user);
         User GetUser(int userId);
+        int GetRandomUserId();
     }
 }

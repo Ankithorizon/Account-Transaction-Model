@@ -13,6 +13,7 @@ namespace Service_Transaction.Services
     public class UserRepository : IUserRepository
     {
         private readonly ApplicationDbContext appDbContext;
+        private static Random random = new Random();
 
         public UserRepository(ApplicationDbContext appDbContext)
         {
@@ -41,6 +42,18 @@ namespace Service_Transaction.Services
         public User GetUser(int userId)
         {
             return appDbContext.Users.Where(x => x.UserId == userId).FirstOrDefault();
-        }      
+        }    
+        
+        public int GetRandomUserId()
+        {
+            if (appDbContext.Users != null && appDbContext.Users.Count() > 0)
+            {
+                int num = random.Next(0, appDbContext.Users.Count() - 1);
+                return appDbContext.Users.ElementAtOrDefault(num).UserId;
+            }
+            else
+                return 0;
+          
+        }
     }
 }

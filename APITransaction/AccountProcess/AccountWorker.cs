@@ -1,4 +1,5 @@
-﻿using EFCore_Transaction.Models;
+﻿using APITransaction.Helpers;
+using EFCore_Transaction.Models;
 using Microsoft.Extensions.Logging;
 using Service_Transaction.Contracts;
 using System;
@@ -13,11 +14,15 @@ namespace APITransaction.AccountProcess
     {
         readonly ILogger<AccountWorker> _logger;
         readonly IAccountRepository accountService;
+        readonly IUserRepository userService;
+        readonly CreateObjectHelper helper;
 
-        public AccountWorker(ILogger<AccountWorker> logger, IAccountRepository accountService)
+        public AccountWorker(CreateObjectHelper helper, ILogger<AccountWorker> logger, IAccountRepository accountService, IUserRepository userService)
         {
             _logger = logger;
             this.accountService = accountService;
+            this.helper = helper;
+            this.userService = userService;
         }
 
         public async Task AddAccounts_BK_Worker_Process(CancellationToken cancellationToken)
@@ -32,10 +37,10 @@ namespace APITransaction.AccountProcess
             {
                 if (accountService.AddAccount(new Account()
                 {
-                    AccountNumber = 0,
-                    AccountType = (int)AccountType.Chequing,
-                    Balance = 0,
-                    UserId = 1,
+                    AccountNumber = helper.GetAccountNumber(5,3),
+                    AccountType = (int)helper.GetAccountType(),
+                    Balance = helper.GetBalance(),
+                    UserId = userService.GetRandomUserId()
                 }) != null)
                 {
                     _logger.LogInformation("New Account Added To Database Successfully!");

@@ -82,6 +82,20 @@ using MudBlazor;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 6 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_AccountMgr.razor"
+using EFCore_Transaction.Models;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 7 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_AccountMgr.razor"
+using Service_Transaction.DTO;
+
+#line default
+#line hidden
+#nullable disable
     [Microsoft.AspNetCore.Components.RouteAttribute("/accountmgr")]
     public partial class _AccountMgr : Microsoft.AspNetCore.Components.ComponentBase
     {
@@ -90,6 +104,51 @@ using MudBlazor;
         {
         }
         #pragma warning restore 1998
+#nullable restore
+#line 114 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_AccountMgr.razor"
+       
+
+    private bool hover = true;
+
+    // very first load of table for accounts,,, displays number of rows
+    // in table
+    // @ref="table" code in table configuration
+    private MudTable<Account> table;
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        table.SetRowsPerPage(5);
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    // response from background-worker-process
+    private BKProcessResponse BKP_Response_DB = new BKProcessResponse();
+    private BKProcessResponse BKP_Response_CSVFile = new BKProcessResponse();
+
+    private List<Account> accounts = new List<Account>();
+
+    // add accounts to db
+    // call worker-process
+    // via web-api call
+    private async Task CallWorkerProcess_DB()
+    {
+        BKP_Response_DB = await accountApi.AddAccountsToDB_BackgroundWorkerProcessAsync();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // call to api-account-controller
+        // this account-controller[api-worker-service-controller],,,
+        // next uses account-repository[data-access-service] to access database
+        accounts = await accountApi.GetAccountsAsync();
+    }
+
+
+#line default
+#line hidden
+#nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private MudBlazor.ISnackbar snackBar { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private Service_Transaction.Contracts.IAccountRepository accountService { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private BlazorServer_Transaction.ApiCallHelpers.AccountApiClient accountApi { get; set; }
     }
 }
 #pragma warning restore 1591
