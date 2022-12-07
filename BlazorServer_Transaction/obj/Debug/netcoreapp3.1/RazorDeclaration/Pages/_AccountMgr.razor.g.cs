@@ -108,6 +108,8 @@ using Service_Transaction.DTO;
 #line 114 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_AccountMgr.razor"
        
 
+    public Array accountTypes = Enum.GetValues(typeof(AccountType));
+
     private bool hover = true;
 
     // very first load of table for accounts,,, displays number of rows
@@ -125,6 +127,12 @@ using Service_Transaction.DTO;
     private BKProcessResponse BKP_Response_CSVFile = new BKProcessResponse();
 
     private List<Account> accounts = new List<Account>();
+
+    private string GetAccountType(int acType)
+    {
+        return accountTypes.GetValue(acType).ToString();
+    }
+
 
     // add accounts to db
     // call worker-process

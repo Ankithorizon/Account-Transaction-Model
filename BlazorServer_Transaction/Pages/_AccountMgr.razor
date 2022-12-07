@@ -102,7 +102,7 @@
             <MudTd DataLabel="AccountNumber">@context.AccountNumber</MudTd>
             <MudTd DataLabel="Balance">@context.Balance</MudTd>
             <MudTd DataLabel="UserId">@context.UserId</MudTd>
-            <MudTd DataLabel="AccountType">@context.AccountType</MudTd>
+            <MudTd DataLabel="AccountType">@GetAccountType(context.AccountType)</MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="new int[] { 50, 100 }" />
@@ -112,6 +112,8 @@
 
 
 @code {
+
+    public Array accountTypes = Enum.GetValues(typeof(AccountType));
 
     private bool hover = true;
 
@@ -130,6 +132,12 @@
     private BKProcessResponse BKP_Response_CSVFile = new BKProcessResponse();
 
     private List<Account> accounts = new List<Account>();
+
+    private string GetAccountType(int acType)
+    {
+        return accountTypes.GetValue(acType).ToString();
+    }
+
 
     // add accounts to db
     // call worker-process

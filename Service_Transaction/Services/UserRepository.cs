@@ -48,8 +48,8 @@ namespace Service_Transaction.Services
         {
             if (appDbContext.Users != null && appDbContext.Users.Count() > 0)
             {
-                int num = random.Next(0, appDbContext.Users.Count() - 1);
-                return appDbContext.Users.ElementAtOrDefault(num).UserId;
+                int num = random.Next(0, appDbContext.Users.Count() - 1);  
+                return appDbContext.Users.ToList().ElementAtOrDefault(num).UserId;
             }
             else
                 return 0;

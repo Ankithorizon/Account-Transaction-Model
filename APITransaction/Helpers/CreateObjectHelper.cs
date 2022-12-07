@@ -164,7 +164,7 @@ namespace APITransaction.Helpers
             string rightNumbers = new string(Enumerable.Repeat(numbers, rLength)
               .Select(s => s[random.Next(s.Length)]).ToArray());
 
-            return Convert.ToInt32(leftNumbers) + Convert.ToInt32(rightNumbers);
+            return Convert.ToInt32(leftNumbers + rightNumbers);
         }
         // AccountType
         public AccountType GetAccountType()
@@ -178,7 +178,7 @@ namespace APITransaction.Helpers
         // Balance
         public decimal GetBalance()
         {
-            return random.Next(5000, 999999);
+            return random.Next(5000, 99999);
         }
       
 

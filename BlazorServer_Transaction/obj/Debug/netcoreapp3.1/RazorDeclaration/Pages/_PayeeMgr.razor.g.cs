@@ -108,6 +108,8 @@ using Service_Transaction.DTO;
 #line 114 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_PayeeMgr.razor"
        
 
+    public Array payeeTypes = Enum.GetValues(typeof(PayeeType));
+
     private bool hover = true;
 
     // very first load of table for payees,,, displays number of rows
@@ -125,6 +127,11 @@ using Service_Transaction.DTO;
     private BKProcessResponse BKP_Response_CSVFile = new BKProcessResponse();
 
     private List<Payee> payees = new List<Payee>();
+
+    private string GetPayeeType(int payeeType)
+    {
+        return payeeTypes.GetValue(payeeType).ToString();
+    }
 
     // add payees to db
     // call worker-process

@@ -102,7 +102,7 @@
             <MudTd DataLabel="PayeeName">@context.PayeeName</MudTd>
             <MudTd DataLabel="Description">@context.Description</MudTd>
             <MudTd DataLabel="PayeeACNumber">@context.PayeeACNumber</MudTd>
-            <MudTd DataLabel="PayeeType">@context.PayeeType</MudTd>
+            <MudTd DataLabel="PayeeType">@GetPayeeType(context.PayeeType)</MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="new int[] { 50, 100 }" />
@@ -112,6 +112,8 @@
 
 
 @code {
+
+    public Array payeeTypes = Enum.GetValues(typeof(PayeeType));
 
     private bool hover = true;
 
@@ -130,6 +132,11 @@
     private BKProcessResponse BKP_Response_CSVFile = new BKProcessResponse();
 
     private List<Payee> payees = new List<Payee>();
+
+    private string GetPayeeType(int payeeType)
+    {
+        return payeeTypes.GetValue(payeeType).ToString();
+    }
 
     // add payees to db
     // call worker-process
