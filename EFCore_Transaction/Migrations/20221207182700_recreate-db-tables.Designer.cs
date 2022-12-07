@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFCore_Transaction.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221205184056_db-create")]
-    partial class dbcreate
+    [Migration("20221207182700_recreate-db-tables")]
+    partial class recreatedbtables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -65,9 +65,8 @@ namespace EFCore_Transaction.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PayeeType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PayeeType")
+                        .HasColumnType("int");
 
                     b.HasKey("PayeeId");
 

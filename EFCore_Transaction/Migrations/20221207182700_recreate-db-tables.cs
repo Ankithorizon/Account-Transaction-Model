@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EFCore_Transaction.Migrations
 {
-    public partial class dbcreate : Migration
+    public partial class recreatedbtables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,7 +16,7 @@ namespace EFCore_Transaction.Migrations
                     PayeeName = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     PayeeACNumber = table.Column<string>(nullable: false),
-                    PayeeType = table.Column<string>(nullable: false)
+                    PayeeType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

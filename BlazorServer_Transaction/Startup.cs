@@ -40,6 +40,8 @@ namespace BlazorServer_Transaction
 
             // call to api-user-controller
             services.AddHttpClient<UserApiClient>();
+            // call to api-payee-controller
+            services.AddHttpClient<PayeeApiClient>();
 
 
             // application-db-context

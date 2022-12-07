@@ -63,9 +63,8 @@ namespace EFCore_Transaction.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PayeeType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PayeeType")
+                        .HasColumnType("int");
 
                     b.HasKey("PayeeId");
 

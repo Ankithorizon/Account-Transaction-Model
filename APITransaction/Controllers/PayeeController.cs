@@ -48,6 +48,6 @@ namespace APITransaction.Controllers
         public async Task<IActionResult> GetPayees()
         {
             return Ok(await _payeeService.GetAllPayees());
-        }
+        }   
     }
 }

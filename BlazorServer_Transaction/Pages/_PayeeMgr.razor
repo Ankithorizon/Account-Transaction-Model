@@ -94,15 +94,13 @@
             <MudTh>#</MudTh>
             <MudTh>Payee Name</MudTh>
             <MudTh>Description</MudTh>
-            <MudTh>Payee AC Number</MudTh>
-            <MudTh>Payee Type</MudTh>
+            <MudTh>Payee AC Number</MudTh>           
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="PayeeId">@context.PayeeId</MudTd>
             <MudTd DataLabel="PayeeName">@context.PayeeName</MudTd>
             <MudTd DataLabel="Description">@context.Description</MudTd>
             <MudTd DataLabel="PayeeACNumber">@context.PayeeACNumber</MudTd>
-            <MudTd DataLabel="PayeeType">@context.PayeeType</MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="new int[] { 50, 100 }" />
