@@ -33,7 +33,7 @@ namespace APITransaction.AccountProcess
 
             // while (!cancellationToken.IsCancellationRequested)
             // while (!flag)
-            while (count <= 10)
+            while (count <= 30)
             {
                 if (accountService.AddAccount(new Account()
                 {
@@ -44,7 +44,7 @@ namespace APITransaction.AccountProcess
                 }) != null)
                 {
                     _logger.LogInformation("New Account Added To Database Successfully!");
-                    await Task.Delay(2 * 1000);
+                    await Task.Delay(1 * 1000);
                     // flag = true;
                     count++;
                 }
@@ -55,7 +55,7 @@ namespace APITransaction.AccountProcess
                     // something goes wrong @ account-repository, then stop adding
                     // further account @ db and return back from
                     // AddAccount async task here
-                    count = 11;
+                    count = 31;
                 }
             }
         }
