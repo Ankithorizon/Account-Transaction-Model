@@ -31,7 +31,7 @@ namespace APITransaction.Controllers
             _accountService = accountService;
         }
 
-        // add 10 accounts to db via background-worker-process
+        // add 30 accounts to db via background-worker-process
         [HttpGet]
         [Route("add_accounts_to_db")]
         public async Task<IActionResult> Add_Accounts_To_DB_BK_Worker_Process()
