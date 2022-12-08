@@ -11,5 +11,6 @@ namespace Service_Transaction.Contracts
         Task<List<Transaction>> GetAllTransactions();
         Transaction AddTransaction(Transaction transaction);
         Transaction GetTransaction(int transactionId);
+        List<string> GetAllTransactionTypes();
     }
 }

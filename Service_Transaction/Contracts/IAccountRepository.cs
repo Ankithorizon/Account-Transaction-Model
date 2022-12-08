@@ -1,4 +1,5 @@
 ﻿using EFCore_Transaction.Models;
+using Service_Transaction.DTO;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,6 +13,6 @@ namespace Service_Transaction.Contracts
         Account AddAccount(Account account);
         Account GetAccount(int accountId);
         List<string> GetAllAccountTypes();
-
+        AccountBalance GetRandomAccountId();
     }
 }

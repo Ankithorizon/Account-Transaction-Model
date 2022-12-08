@@ -2,6 +2,7 @@
 using EFCore_Transaction.Models;
 using Microsoft.EntityFrameworkCore;
 using Service_Transaction.Contracts;
+using Service_Transaction.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Service_Transaction.Services
     public class AccountRepository : IAccountRepository
     {
         private readonly ApplicationDbContext appDbContext;
-
+        private static Random random = new Random();
         public AccountRepository(ApplicationDbContext appDbContext)
         {
             this.appDbContext = appDbContext;
@@ -51,6 +52,27 @@ namespace Service_Transaction.Services
                 accountTypes.Add(accountType);
             }
             return accountTypes;
+        }
+
+        public AccountBalance GetRandomAccountId()
+        {
+            AccountBalance data = new AccountBalance();
+
+            if (appDbContext.Accounts != null && appDbContext.Accounts.Count() > 0)
+            {
+                int num = random.Next(0, appDbContext.Accounts.Count() - 1);
+                var account = appDbContext.Accounts.ToList().ElementAtOrDefault(num);
+                if (account != null)
+                {
+                    data.AccountId = account.AccountId;
+                    data.Balance = account.Balance;
+                    return data;
+                }
+                else
+                    return null;
+            }
+            else
+                return null;
         }
     }
 }

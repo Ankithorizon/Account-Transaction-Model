@@ -42,6 +42,16 @@ namespace Service_Transaction.Services
         public Transaction GetTransaction(int transactionId)
         {
             return appDbContext.Transactions.Where(x => x.TransactionId == transactionId).FirstOrDefault();
-        }      
+        }
+
+        public List<string> GetAllTransactionTypes()
+        {
+            List<string> transactionTypes = new List<string>();
+            foreach (string transactionType in Enum.GetNames(typeof(TransactionType)))
+            {
+                transactionTypes.Add(transactionType);
+            }
+            return transactionTypes;
+        }
     }
 }

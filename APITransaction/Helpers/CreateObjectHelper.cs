@@ -180,8 +180,34 @@ namespace APITransaction.Helpers
         {
             return random.Next(5000, 99999);
         }
-      
 
+
+        // TransactionType
+        public TransactionType GetTransactionType()
+        {
+            Array values = Enum.GetValues(typeof(TransactionType));
+            Random random = new Random();
+            TransactionType randomTransactionType = (TransactionType)values.GetValue(random.Next(values.Length));
+            return randomTransactionType;
+        }
+        // TransactionAmount
+        public decimal GetTransactionAmount()
+        {
+            return random.Next(1, 99999);
+        }
+        // TransactionDate
+        public DateTime GetTransactionDate()
+        {
+            int dateOffset = random.Next(-20, 20);
+            return new DateTime().AddDays(dateOffset);
+        }
+        // RefCode
+        public string GetRefCode(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
 
     }
 }
