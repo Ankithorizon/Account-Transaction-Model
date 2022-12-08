@@ -199,7 +199,7 @@ namespace APITransaction.Helpers
         public DateTime GetTransactionDate()
         {
             int dateOffset = random.Next(-20, 20);
-            return new DateTime().AddDays(dateOffset);
+            return DateTime.Now.AddDays(dateOffset);
         }
         // RefCode
         public string GetRefCode(int length)

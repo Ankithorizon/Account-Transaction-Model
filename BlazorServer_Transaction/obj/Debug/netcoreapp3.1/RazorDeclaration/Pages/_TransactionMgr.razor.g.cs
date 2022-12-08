@@ -119,7 +119,7 @@ using Service_Transaction.DTO;
     private MudTable<Transaction> table;
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
-        table.SetRowsPerPage(5);
+        table.SetRowsPerPage(50);
         return base.OnAfterRenderAsync(firstRender);
     }
 

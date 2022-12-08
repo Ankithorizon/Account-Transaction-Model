@@ -55,13 +55,13 @@ namespace APITransaction.TransactionProcess
 
                     if (transaction.TransactionType == (int)TransactionType.IN)
                     {
-                        transaction.CurrentBalance = transaction.LastBalance + transaction.TransactionAmount;
+                        transaction.CurrentBalance = Decimal.Add(transaction.LastBalance,transaction.TransactionAmount);
                         transaction.RefCode = helper.GetRefCode(10);
                         transaction.TransactionStatus = (int)TransactionStatus.SUCCESS;
                     }
                     else
-                    {
-                        if ((transaction.LastBalance - transaction.TransactionAmount) < 0)
+                    {                       
+                        if (Decimal.Subtract(transaction.LastBalance,transaction.TransactionAmount) < 0)
                         {
                             transaction.CurrentBalance = transaction.LastBalance;
                             transaction.RefCode = helper.GetRefCode(10);
@@ -69,7 +69,7 @@ namespace APITransaction.TransactionProcess
                         }
                         else
                         {
-                            transaction.CurrentBalance = transaction.LastBalance - transaction.TransactionAmount;
+                            transaction.CurrentBalance = Decimal.Subtract(transaction.LastBalance,transaction.TransactionAmount);
                             transaction.RefCode = helper.GetRefCode(10);
                             transaction.TransactionStatus = (int)TransactionStatus.SUCCESS;
                         }
@@ -80,8 +80,7 @@ namespace APITransaction.TransactionProcess
                     if (transactionService.AddTransaction(transaction, accountBalance) != null)
                     {
                         _logger.LogInformation("New Transaction Added To Database Successfully!");
-                        await Task.Delay(1 * 1000);
-                        // flag = true;
+                        await Task.Delay(1*1000);
                         count++;
                     }
                     else

@@ -97,8 +97,8 @@
             <MudTh>Type</MudTh>
             <MudTh>Amount</MudTh>
             <MudTh>Status</MudTh>
-            <MudTh>Current</MudTh>
-            <MudTh>Last</MudTh>
+            <MudTh>Current Balance</MudTh>
+            <MudTh>Last Balance</MudTh>
             <MudTh>Ref-Code</MudTh>
             <MudTh>Date</MudTh>
         </HeaderContent>
@@ -112,7 +112,7 @@
             <MudTd DataLabel="CurrentBalance">@context.CurrentBalance</MudTd>
             <MudTd DataLabel="LastBalance">@context.LastBalance</MudTd>
             <MudTd DataLabel="RefCode">@context.RefCode</MudTd>
-            <MudTd DataLabel="TransactionDate">@context.TransactionDate</MudTd>
+            <MudTd DataLabel="TransactionDate">@Convert.ToDateTime(@context.TransactionDate).ToString("dd, MMM yy")</MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="new int[] { 50, 100 }" />

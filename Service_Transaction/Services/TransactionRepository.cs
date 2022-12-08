@@ -22,7 +22,7 @@ namespace Service_Transaction.Services
 
         public async Task<List<Transaction>> GetAllTransactions()
         {
-            return await appDbContext.Transactions.ToListAsync();
+            return await appDbContext.Transactions.OrderByDescending(x=>x.TransactionDate).ToListAsync();
         }
 
 
