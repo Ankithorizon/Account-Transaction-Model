@@ -1,9 +1,174 @@
 ﻿@page "/transactionmgr"
+<!-- web api connector -->
+@inject BlazorServer_Transaction.ApiCallHelpers.TransactionApiClient transactionApi
+<!-- service project connector -->
+@inject Service_Transaction.Contracts.ITransactionRepository transactionService
+@using EFCore_Transaction.Models
+@using Service_Transaction.DTO
+@inject MudBlazor.ISnackbar snackBar
 
-<h1>Create Transactions!</h1>
+<style>
+    .refreshBtn {
+        font-size: medium;
+        padding: 30px;
+        margin: 10px;
+    }
+
+    .addTransactionsBtn {
+        font-size: medium;
+        padding: 30px;
+        margin: 10px;
+    }
+
+    .btnHeader {
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        font-size: x-large;
+    }
+
+    .btnDetails {
+        margin-top: 25px;
+        margin-bottom: 50px;
+        font-size: large;
+        color: blue;
+        font-weight: bold;
+        background-color: white;
+        padding: 10px;
+    }
+
+    .bkpResponse {
+        margin-top: 15px;
+        font-size: x-large;
+        color: white;
+        font-weight: bold;
+        background-color: black;
+        padding: 10px;
+    }
+
+    .noData {
+        color: red;
+        font-size: x-large;
+        font-weight: bold;
+    }
+</style>
+<h1>Manage Transactions!</h1>
+<!-- add transactions to db by background-worker-process @@ web-api -->
+<div class="container d-flex justify-space-around">
+    <MudButton Class="addTransactionsBtn"
+               @onclick="@( (x) => CallWorkerProcess_DB())"
+               Variant="Variant.Filled"
+               Color="Color.Tertiary">
+        <span>
+            <span class="oi oi-file btnHeader" aria-hidden="true">
+                Add Transactions To DataBase
+            </span>
+            <br />
+            <span class="btnDetails">
+                [Blazor App --&gt;&gt; Web API [Transaction-Controller --&gt;&gt; Worker-Service(StartAsync)] ]
+            </span>
+        </span>
+    </MudButton>
+</div>
 <p></p>
-<h1>View Transactions!</h1>
+<!-- response from db-background-worker-process @@ web-api -->
+<div class="container d-flex justify-space-around">
+    @if (BKP_Response_DB.Response != null)
+    {
+        <div class="container bkpResponse d-flex justify-space-around">
+            @BKP_Response_DB.Response
+        </div>
+    }
+</div>
+<p></p>
+
+
+<MudPaper Square="true" Class="d-flex justify-space-around">
+    <!-- payees -->
+    <MudTable Items="@transactions"
+              @ref="table"
+              Breakpoint="Breakpoint.Sm"
+              MultiSelection="true"
+              Hover="@hover">
+        <HeaderContent>
+            <MudTh>#</MudTh>
+            <MudTh>Payee</MudTh>
+            <MudTh>Account</MudTh>
+            <MudTh>Type</MudTh>
+            <MudTh>Amount</MudTh>
+            <MudTh>Status</MudTh>
+            <MudTh>Current</MudTh>
+            <MudTh>Last</MudTh>
+            <MudTh>Ref-Code</MudTh>
+            <MudTh>Date</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="TransactionId">@context.TransactionId</MudTd>
+            <MudTd DataLabel="PayeeId">@context.PayeeId</MudTd>
+            <MudTd DataLabel="AccountId">@context.AccountId</MudTd>
+            <MudTd DataLabel="TransactionType">@GetTransactionType(context.TransactionType)</MudTd>
+            <MudTd DataLabel="TransactionAmount">@context.TransactionAmount</MudTd>
+            <MudTd DataLabel="TransactionStatus">@GetTransactionStatus(context.TransactionStatus)</MudTd>
+            <MudTd DataLabel="CurrentBalance">@context.CurrentBalance</MudTd>
+            <MudTd DataLabel="LastBalance">@context.LastBalance</MudTd>
+            <MudTd DataLabel="RefCode">@context.RefCode</MudTd>
+            <MudTd DataLabel="TransactionDate">@context.TransactionDate</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+</MudPaper>
+
 
 @code {
 
+    public Array transactionTypes = Enum.GetValues(typeof(TransactionType));
+    public Array transactionStatus = Enum.GetValues(typeof(TransactionStatus));
+
+    private bool hover = true;
+
+    // very first load of table for transactions,,, displays number of rows
+    // in table
+    // @ref="table" code in table configuration
+    private MudTable<Transaction> table;
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        table.SetRowsPerPage(50);
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    // response from background-worker-process
+    private BKProcessResponse BKP_Response_DB = new BKProcessResponse();
+    private BKProcessResponse BKP_Response_CSVFile = new BKProcessResponse();
+
+    private List<Transaction> transactions = new List<Transaction>();
+
+    private string GetTransactionType(int trType)
+    {
+        return transactionTypes.GetValue(trType).ToString();
+    }
+    private string GetTransactionStatus(int trStatus)
+    {
+        return transactionStatus.GetValue(trStatus).ToString();
+    }
+
+
+    // add transactions to db
+    // call worker-process
+    // via web-api call
+    private async Task CallWorkerProcess_DB()
+    {
+        BKP_Response_DB = await transactionApi.AddTransactionsToDB_BackgroundWorkerProcessAsync();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // call to api-transaction-controller
+        // this transaction-controller[api-worker-service-controller],,,
+        // next uses transaction-repository[data-access-service] to access database
+        transactions = await transactionApi.GetTransactionsAsync();
+    }
+
 }
+

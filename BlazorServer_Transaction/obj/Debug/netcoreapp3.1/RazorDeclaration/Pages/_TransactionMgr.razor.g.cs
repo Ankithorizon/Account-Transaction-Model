@@ -82,6 +82,20 @@ using MudBlazor;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 6 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionMgr.razor"
+using EFCore_Transaction.Models;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 7 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionMgr.razor"
+using Service_Transaction.DTO;
+
+#line default
+#line hidden
+#nullable disable
     [Microsoft.AspNetCore.Components.RouteAttribute("/transactionmgr")]
     public partial class _TransactionMgr : Microsoft.AspNetCore.Components.ComponentBase
     {
@@ -90,6 +104,64 @@ using MudBlazor;
         {
         }
         #pragma warning restore 1998
+#nullable restore
+#line 124 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionMgr.razor"
+       
+
+    public Array transactionTypes = Enum.GetValues(typeof(TransactionType));
+    public Array transactionStatus = Enum.GetValues(typeof(TransactionStatus));
+
+    private bool hover = true;
+
+    // very first load of table for transactions,,, displays number of rows
+    // in table
+    // @ref="table" code in table configuration
+    private MudTable<Transaction> table;
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        table.SetRowsPerPage(5);
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    // response from background-worker-process
+    private BKProcessResponse BKP_Response_DB = new BKProcessResponse();
+    private BKProcessResponse BKP_Response_CSVFile = new BKProcessResponse();
+
+    private List<Transaction> transactions = new List<Transaction>();
+
+    private string GetTransactionType(int trType)
+    {
+        return transactionTypes.GetValue(trType).ToString();
+    }
+    private string GetTransactionStatus(int trStatus)
+    {
+        return transactionStatus.GetValue(trStatus).ToString();
+    }
+
+
+    // add transactions to db
+    // call worker-process
+    // via web-api call
+    private async Task CallWorkerProcess_DB()
+    {
+        BKP_Response_DB = await transactionApi.AddTransactionsToDB_BackgroundWorkerProcessAsync();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // call to api-transaction-controller
+        // this transaction-controller[api-worker-service-controller],,,
+        // next uses transaction-repository[data-access-service] to access database
+        transactions = await transactionApi.GetTransactionsAsync();
+    }
+
+
+#line default
+#line hidden
+#nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private MudBlazor.ISnackbar snackBar { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private Service_Transaction.Contracts.ITransactionRepository transactionService { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private BlazorServer_Transaction.ApiCallHelpers.TransactionApiClient transactionApi { get; set; }
     }
 }
 #pragma warning restore 1591

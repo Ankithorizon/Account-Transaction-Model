@@ -13,7 +13,6 @@ namespace Service_Transaction.Contracts
         Account AddAccount(Account account);
         Account GetAccount(int accountId);
         List<string> GetAllAccountTypes();
-        AccountBalance GetRandomAccountInfo();
-        bool UpdateAccountBalance(decimal newBalance, int accountId);
+        AccountBalance GetRandomAccountInfo();        
     }
 }
