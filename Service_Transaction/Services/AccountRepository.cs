@@ -54,7 +54,7 @@ namespace Service_Transaction.Services
             return accountTypes;
         }
 
-        public AccountBalance GetRandomAccountId()
+        public AccountBalance GetRandomAccountInfo()
         {
             AccountBalance data = new AccountBalance();
 
@@ -73,6 +73,27 @@ namespace Service_Transaction.Services
             }
             else
                 return null;
+        }
+
+        public bool UpdateAccountBalance(decimal newBalance, int accountId)
+        {
+            try
+            {
+                var account = appDbContext.Accounts
+                         .Where(x => x.AccountId == accountId).FirstOrDefault();
+                if (account != null)
+                {
+                    account.Balance = newBalance;
+                    appDbContext.SaveChanges();
+                    return true;
+                }
+                else
+                    return false;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }         
         }
     }
 }

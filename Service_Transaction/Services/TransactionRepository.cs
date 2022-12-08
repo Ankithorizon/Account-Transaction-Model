@@ -2,6 +2,7 @@
 using EFCore_Transaction.Models;
 using Microsoft.EntityFrameworkCore;
 using Service_Transaction.Contracts;
+using Service_Transaction.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,13 +26,27 @@ namespace Service_Transaction.Services
         }
 
 
-        public Transaction AddTransaction(Transaction transaction)
+        public Transaction AddTransaction(Transaction transaction, AccountBalance accountBalance)
         {
             try
             {
-                var result = appDbContext.Transactions.Add(transaction);
-                appDbContext.SaveChanges();
-                return result.Entity;
+                var account = appDbContext.Accounts
+                      .Where(x => x.AccountId == accountBalance.AccountId).FirstOrDefault();
+                if (account != null)
+                {
+                    // 1
+                    account.Balance = accountBalance.Balance;
+
+                    // 2
+                    var result = appDbContext.Transactions.Add(transaction);
+                    
+                    appDbContext.SaveChanges();
+                    return result.Entity;
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch(Exception ex)
             {

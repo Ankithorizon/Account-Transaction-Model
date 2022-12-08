@@ -1,4 +1,5 @@
-﻿using EFCore_Transaction.Models;
+﻿using APITransaction.Helpers;
+using EFCore_Transaction.Models;
 using Microsoft.Extensions.Logging;
 using Service_Transaction.Contracts;
 using System;
@@ -13,11 +14,21 @@ namespace APITransaction.TransactionProcess
     {
         readonly ILogger<TransactionWorker> _logger;
         readonly ITransactionRepository transactionService;
+        readonly IPayeeRepository payeeService;
+        readonly IAccountRepository accountService;
+        readonly CreateObjectHelper helper;
 
-        public TransactionWorker(ILogger<TransactionWorker> logger, ITransactionRepository transactionService)
+        public TransactionWorker(CreateObjectHelper helper, 
+            ILogger<TransactionWorker> logger, 
+            ITransactionRepository transactionService, 
+            IPayeeRepository payeeService, 
+            IAccountRepository accountService)
         {
             _logger = logger;
             this.transactionService = transactionService;
+            this.helper = helper;
+            this.payeeService = payeeService;
+            this.accountService = accountService;
         }
 
         public async Task AddTransactions_BK_Worker_Process(CancellationToken cancellationToken)
@@ -28,26 +39,60 @@ namespace APITransaction.TransactionProcess
 
             // while (!cancellationToken.IsCancellationRequested)
             // while (!flag)
-            while (count <= 10)
+            while (count <= 100)
             {
-                if (transactionService.AddTransaction(new Transaction() { 
-                      
-                }) != null)
+                try
                 {
-                    _logger.LogInformation("New Transaction Added To Database Successfully!");
-                    await Task.Delay(2 * 1000);
-                    // flag = true;
-                    count++;
-                }
-                else
-                {
-                    // flag = true;
+                    Transaction transaction = new Transaction();
+                    transaction.PayeeId = payeeService.GetRandomPayeeId();
+                    transaction.TransactionType = (int)helper.GetTransactionType(); // IN, OUT
+                    transaction.TransactionAmount = helper.GetTransactionAmount();
+                    transaction.TransactionDate = helper.GetTransactionDate();
 
-                    // something goes wrong @ transaction-repository, then stop adding
-                    // further transaction @ db and return back from
-                    // AddTransaction async task here
-                    count = 11;
+                    var accountBalance = accountService.GetRandomAccountInfo();
+                    transaction.AccountId = accountBalance.AccountId;
+                    transaction.LastBalance = accountBalance.Balance;
+
+                    if (transaction.TransactionType == (int)TransactionType.IN)
+                    {
+                        transaction.CurrentBalance = transaction.LastBalance + transaction.TransactionAmount;
+                        transaction.RefCode = helper.GetRefCode(10);
+                        transaction.TransactionStatus = (int)TransactionStatus.SUCCESS;
+                    }
+                    else
+                    {
+                        if ((transaction.LastBalance - transaction.TransactionAmount) < 0)
+                        {
+                            transaction.CurrentBalance = transaction.LastBalance;
+                            transaction.RefCode = helper.GetRefCode(10);
+                            transaction.TransactionStatus = (int)TransactionStatus.FAIL;
+                        }
+                        else
+                        {
+                            transaction.CurrentBalance = transaction.LastBalance - transaction.TransactionAmount;
+                            transaction.RefCode = helper.GetRefCode(10);
+                            transaction.TransactionStatus = (int)TransactionStatus.SUCCESS;
+                        }
+                    }
+
+                    accountBalance.Balance = transaction.CurrentBalance;
+
+                    if (transactionService.AddTransaction(transaction, accountBalance) != null)
+                    {
+                        _logger.LogInformation("New Transaction Added To Database Successfully!");
+                        await Task.Delay(1 * 1000);
+                        // flag = true;
+                        count++;
+                    }
+                    else
+                    {
+                        count = 101;
+                    }
                 }
+                catch(Exception ex)
+                {
+                    count = 101;
+                }            
             }
         }
     }
