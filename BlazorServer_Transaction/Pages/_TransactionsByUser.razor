@@ -94,7 +94,9 @@
         // call to api-transaction-controller
         // this transaction-controller[api-worker-service-controller],,,
         // next uses transaction-repository[data-access-service] to access database
-        transactions = await transactionApi.GetTransactionsAsync();
+        // transactions = await transactionApi.GetTransactionsByUserAsync(null);
+        
+        transactions = await transactionService.GetTransactionsByUser(1);
     }
 
 }

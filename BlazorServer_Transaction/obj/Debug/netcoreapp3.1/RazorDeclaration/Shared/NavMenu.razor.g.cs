@@ -90,7 +90,7 @@ using MudBlazor;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 42 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Shared\NavMenu.razor"
+#line 47 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Shared\NavMenu.razor"
        
     private bool collapseNavMenu = true;
 

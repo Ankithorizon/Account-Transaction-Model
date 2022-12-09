@@ -50,13 +50,6 @@ namespace APITransaction.Controllers
         public async Task<IActionResult> GetTransactions()
         {
             return Ok(await _transactionService.GetAllTransactions());
-        }
-
-        [HttpGet]
-        [Route("get_transactions_by_user")]
-        public IActionResult GetTransactionsByUser(int id)
-        {
-            return Ok(_transactionService.GetTransactionsByUser(id));
-        }
+        }     
     }
 }

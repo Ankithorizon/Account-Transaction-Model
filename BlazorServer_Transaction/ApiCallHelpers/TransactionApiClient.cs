@@ -56,7 +56,5 @@ namespace BlazorServer_Transaction.ApiCallHelpers
             }
             return new List<Transaction>();
         }
-
-
     }
 }

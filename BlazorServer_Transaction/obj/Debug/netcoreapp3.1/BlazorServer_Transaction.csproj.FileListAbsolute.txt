@@ -95,3 +95,5 @@ C:\Transaction-Model\APITransaction\BlazorServer_Transaction\obj\Debug\netcoreap
 C:\Transaction-Model\APITransaction\BlazorServer_Transaction\obj\Debug\netcoreapp3.1\Razor\Pages\_AccountMgr.razor.g.cs
 C:\Transaction-Model\APITransaction\BlazorServer_Transaction\obj\Debug\netcoreapp3.1\Razor\Pages\_PayeeMgr.razor.g.cs
 C:\Transaction-Model\APITransaction\BlazorServer_Transaction\obj\Debug\netcoreapp3.1\Razor\Pages\_TransactionMgr.razor.g.cs
+C:\Transaction-Model\APITransaction\BlazorServer_Transaction\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\_TransactionsByUser.razor.g.cs
+C:\Transaction-Model\APITransaction\BlazorServer_Transaction\obj\Debug\netcoreapp3.1\Razor\Pages\_TransactionsByUser.razor.g.cs

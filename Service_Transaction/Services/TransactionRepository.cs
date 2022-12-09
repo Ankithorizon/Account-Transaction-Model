@@ -68,14 +68,17 @@ namespace Service_Transaction.Services
             }
             return transactionTypes;
         }
-    
-    
+
+
+        // this one called by blazor server app directly using 
+        // transactions = await transactionService.GetTransactionsByUser(1);
         public async Task<List<Transaction>> GetTransactionsByUser(int userId)
         {            
             List<Transaction> datas = new List<Transaction>();
             try
             {
                 var user = await appDbContext.Users.Include(x => x.Accounts)
+                          .ThenInclude(ac => ac.Transactions)
                           .Where(x => x.UserId == userId).FirstOrDefaultAsync();
                 if (user != null)
                 {
