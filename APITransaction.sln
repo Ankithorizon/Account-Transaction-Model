@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31515.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APITransaction", "APITransaction\APITransaction.csproj", "{5E8239D2-EEB5-4E09-A84B-32F18153A2BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APITransaction", "APITransaction\APITransaction.csproj", "{5E8239D2-EEB5-4E09-A84B-32F18153A2BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_Transaction", "Service_Transaction\Service_Transaction.csproj", "{E64B2E57-4E9C-4484-825F-360C99F47430}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service_Transaction", "Service_Transaction\Service_Transaction.csproj", "{E64B2E57-4E9C-4484-825F-360C99F47430}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCore_Transaction", "EFCore_Transaction\EFCore_Transaction.csproj", "{7A3AF5B6-80F6-4C51-886A-84FD3E0B1645}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore_Transaction", "EFCore_Transaction\EFCore_Transaction.csproj", "{7A3AF5B6-80F6-4C51-886A-84FD3E0B1645}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorServer_Transaction", "BlazorServer_Transaction\BlazorServer_Transaction.csproj", "{B91B8E74-B404-469F-B472-1DA248A964FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServer_Transaction", "BlazorServer_Transaction\BlazorServer_Transaction.csproj", "{B91B8E74-B404-469F-B472-1DA248A964FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

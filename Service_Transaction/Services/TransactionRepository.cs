@@ -68,5 +68,30 @@ namespace Service_Transaction.Services
             }
             return transactionTypes;
         }
+    
+    
+        public async Task<List<Transaction>> GetTransactionsByUser(int userId)
+        {            
+            List<Transaction> datas = new List<Transaction>();
+            try
+            {
+                var user = await appDbContext.Users.Include(x => x.Accounts)
+                          .Where(x => x.UserId == userId).FirstOrDefaultAsync();
+                if (user != null)
+                {
+                    foreach (var account in user.Accounts)
+                    {
+                        foreach (var tr in account.Transactions)
+                        {
+                            datas.Add(tr);
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+            }          
+            return datas;
+        }
     }
 }

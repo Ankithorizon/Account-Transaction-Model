@@ -1,0 +1,101 @@
+﻿@page "/transactionsByUser"
+<!-- web api connector -->
+@inject BlazorServer_Transaction.ApiCallHelpers.TransactionApiClient transactionApi
+<!-- service project connector -->
+@inject Service_Transaction.Contracts.ITransactionRepository transactionService
+@using EFCore_Transaction.Models
+@using Service_Transaction.DTO
+@inject MudBlazor.ISnackbar snackBar
+
+<style>
+    .refreshBtn {
+        font-size: medium;
+        padding: 30px;
+        margin: 10px;
+    }   
+
+    .noData {
+        color: red;
+        font-size: x-large;
+        font-weight: bold;
+    }
+</style>
+<h1>Transactions By User!</h1>
+
+<MudPaper Square="true" Class="d-flex justify-space-around">
+    <!-- payees -->
+    <MudTable Items="@transactions"
+              @ref="table"
+              Breakpoint="Breakpoint.Sm"
+              MultiSelection="true"
+              Hover="@hover">
+        <HeaderContent>
+            <MudTh>#</MudTh>
+            <MudTh>Payee</MudTh>
+            <MudTh>Account</MudTh>
+            <MudTh>Type</MudTh>
+            <MudTh>Amount</MudTh>
+            <MudTh>Status</MudTh>
+            <MudTh>Current Balance</MudTh>
+            <MudTh>Last Balance</MudTh>
+            <MudTh>Ref-Code</MudTh>
+            <MudTh>Date</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="TransactionId">@context.TransactionId</MudTd>
+            <MudTd DataLabel="PayeeId">@context.PayeeId</MudTd>
+            <MudTd DataLabel="AccountId">@context.AccountId</MudTd>
+            <MudTd DataLabel="TransactionType">@GetTransactionType(context.TransactionType)</MudTd>
+            <MudTd DataLabel="TransactionAmount">@context.TransactionAmount</MudTd>
+            <MudTd DataLabel="TransactionStatus">@GetTransactionStatus(context.TransactionStatus)</MudTd>
+            <MudTd DataLabel="CurrentBalance">@context.CurrentBalance</MudTd>
+            <MudTd DataLabel="LastBalance">@context.LastBalance</MudTd>
+            <MudTd DataLabel="RefCode">@context.RefCode</MudTd>
+            <MudTd DataLabel="TransactionDate">@Convert.ToDateTime(@context.TransactionDate).ToString("dd, MMM yy")</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+</MudPaper>
+
+
+@code {
+
+    public Array transactionTypes = Enum.GetValues(typeof(TransactionType));
+    public Array transactionStatus = Enum.GetValues(typeof(TransactionStatus));
+
+    private bool hover = true;
+
+    // very first load of table for transactions,,, displays number of rows
+    // in table
+    // @ref="table" code in table configuration
+    private MudTable<Transaction> table;
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        table.SetRowsPerPage(50);
+        return base.OnAfterRenderAsync(firstRender);
+    }
+      
+    private List<Transaction> transactions = new List<Transaction>();
+
+    private string GetTransactionType(int trType)
+    {
+        return transactionTypes.GetValue(trType).ToString();
+    }
+    private string GetTransactionStatus(int trStatus)
+    {
+        return transactionStatus.GetValue(trStatus).ToString();
+    }
+
+  
+    protected override async Task OnInitializedAsync()
+    {
+        // call to api-transaction-controller
+        // this transaction-controller[api-worker-service-controller],,,
+        // next uses transaction-repository[data-access-service] to access database
+        transactions = await transactionApi.GetTransactionsAsync();
+    }
+
+}
+

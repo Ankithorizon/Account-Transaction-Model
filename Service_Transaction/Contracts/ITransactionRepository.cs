@@ -13,5 +13,6 @@ namespace Service_Transaction.Contracts
         Transaction AddTransaction(Transaction transaction, AccountBalance accountBalance);
         Transaction GetTransaction(int transactionId);
         List<string> GetAllTransactionTypes();
+        Task<List<Transaction>> GetTransactionsByUser(int userId);
     }
 }
