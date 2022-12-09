@@ -2,6 +2,7 @@
 using EFCore_Transaction.Models;
 using Microsoft.EntityFrameworkCore;
 using Service_Transaction.Contracts;
+using Service_Transaction.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,5 +56,25 @@ namespace Service_Transaction.Services
                 return 0;
           
         }
+
+        public async Task<List<UserList>> GetUserList()
+        {
+            List<UserList> datas = new List<UserList>();
+
+            var users = await appDbContext.Users.ToListAsync();
+            if (users != null && users.Count() > 0)
+            {
+                foreach (var user in users)
+                {
+                    datas.Add(new UserList()
+                    {
+                        UserId = user.UserId,
+                        UserName = user.UserName
+                    });
+                }
+            }
+            return datas;
+        }
+
     }
 }

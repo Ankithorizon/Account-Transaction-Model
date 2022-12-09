@@ -83,14 +83,14 @@ using MudBlazor;
 #line hidden
 #nullable disable
 #nullable restore
-#line 6 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
+#line 7 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
 using EFCore_Transaction.Models;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 7 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
+#line 8 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
 using Service_Transaction.DTO;
 
 #line default
@@ -105,7 +105,7 @@ using Service_Transaction.DTO;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 63 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
+#line 71 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
        
 
     public Array transactionTypes = Enum.GetValues(typeof(TransactionType));
@@ -122,8 +122,11 @@ using Service_Transaction.DTO;
         table.SetRowsPerPage(50);
         return base.OnAfterRenderAsync(firstRender);
     }
-      
+
     private List<Transaction> transactions = new List<Transaction>();
+    private List<UserList> users = new List<UserList>();
+    private int UserId = 0;
+
 
     private string GetTransactionType(int trType)
     {
@@ -134,14 +137,16 @@ using Service_Transaction.DTO;
         return transactionStatus.GetValue(trStatus).ToString();
     }
 
-  
+    private void setTransactionsForSelectedUser()
+    {
+
+    }
+
+
+
     protected override async Task OnInitializedAsync()
     {
-        // call to api-transaction-controller
-        // this transaction-controller[api-worker-service-controller],,,
-        // next uses transaction-repository[data-access-service] to access database
-        // transactions = await transactionApi.GetTransactionsByUserAsync(null);
-        
+        users = await userService.GetUserList();
         transactions = await transactionService.GetTransactionsByUser(1);
     }
 
@@ -150,6 +155,7 @@ using Service_Transaction.DTO;
 #line hidden
 #nullable disable
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private MudBlazor.ISnackbar snackBar { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private Service_Transaction.Contracts.IUserRepository userService { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private Service_Transaction.Contracts.ITransactionRepository transactionService { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private BlazorServer_Transaction.ApiCallHelpers.TransactionApiClient transactionApi { get; set; }
     }

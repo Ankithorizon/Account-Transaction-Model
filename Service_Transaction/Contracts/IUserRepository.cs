@@ -1,4 +1,5 @@
 ﻿using EFCore_Transaction.Models;
+using Service_Transaction.DTO;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,5 +13,6 @@ namespace Service_Transaction.Contracts
         User AddUser(User user);
         User GetUser(int userId);
         int GetRandomUserId();
+        Task<List<UserList>> GetUserList();
     }
 }

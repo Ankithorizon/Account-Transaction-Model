@@ -3,25 +3,33 @@
 @inject BlazorServer_Transaction.ApiCallHelpers.TransactionApiClient transactionApi
 <!-- service project connector -->
 @inject Service_Transaction.Contracts.ITransactionRepository transactionService
+@inject Service_Transaction.Contracts.IUserRepository userService
 @using EFCore_Transaction.Models
 @using Service_Transaction.DTO
 @inject MudBlazor.ISnackbar snackBar
 
 <style>
-    .refreshBtn {
-        font-size: medium;
-        padding: 30px;
-        margin: 10px;
-    }   
-
-    .noData {
-        color: red;
-        font-size: x-large;
-        font-weight: bold;
-    }
 </style>
 <h1>Transactions By User!</h1>
 
+<div class="container">
+    <div class="form-group row">
+        <label for="department" class="col-sm-6 col-form-label">
+            User-List
+        </label>
+        <div class="col-sm-10">
+            <InputSelect id="user" 
+                         @bind-Value="UserId" 
+                         class="form-control">
+                @foreach (var user in users)
+                {
+                    <option value="@user.UserId">@user.UserName</option>
+                }
+            </InputSelect>
+        </div>
+    </div>
+</div>
+<p></p>
 <MudPaper Square="true" Class="d-flex justify-space-around">
     <!-- payees -->
     <MudTable Items="@transactions"
@@ -76,8 +84,11 @@
         table.SetRowsPerPage(50);
         return base.OnAfterRenderAsync(firstRender);
     }
-      
+
     private List<Transaction> transactions = new List<Transaction>();
+    private List<UserList> users = new List<UserList>();
+    private int UserId = 0;
+
 
     private string GetTransactionType(int trType)
     {
@@ -88,14 +99,16 @@
         return transactionStatus.GetValue(trStatus).ToString();
     }
 
-  
+    private void setTransactionsForSelectedUser()
+    {
+
+    }
+
+
+
     protected override async Task OnInitializedAsync()
     {
-        // call to api-transaction-controller
-        // this transaction-controller[api-worker-service-controller],,,
-        // next uses transaction-repository[data-access-service] to access database
-        // transactions = await transactionApi.GetTransactionsByUserAsync(null);
-        
+        users = await userService.GetUserList();
         transactions = await transactionService.GetTransactionsByUser(1);
     }
 
