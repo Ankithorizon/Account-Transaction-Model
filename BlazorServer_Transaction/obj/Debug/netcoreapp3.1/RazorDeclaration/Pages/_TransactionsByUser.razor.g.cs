@@ -105,8 +105,13 @@ using Service_Transaction.DTO;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 71 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
+#line 104 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
        
+
+    // select list  
+    private List<UserList> users = new List<UserList>();
+    private UserList selectedUser = new UserList();
+
 
     public Array transactionTypes = Enum.GetValues(typeof(TransactionType));
     public Array transactionStatus = Enum.GetValues(typeof(TransactionStatus));
@@ -124,9 +129,6 @@ using Service_Transaction.DTO;
     }
 
     private List<Transaction> transactions = new List<Transaction>();
-    private List<UserList> users = new List<UserList>();
-    private int UserId = 0;
-
 
     private string GetTransactionType(int trType)
     {
@@ -137,17 +139,17 @@ using Service_Transaction.DTO;
         return transactionStatus.GetValue(trStatus).ToString();
     }
 
-    private void setTransactionsForSelectedUser()
+    private async Task SetTransactionsForSelectedUser(UserList selectedUser)
     {
-
+        transactions = await transactionService.GetTransactionsByUser(selectedUser.UserId);
     }
-
 
 
     protected override async Task OnInitializedAsync()
     {
         users = await userService.GetUserList();
-        transactions = await transactionService.GetTransactionsByUser(1);
+        transactions = await transactionService.GetTransactionsByUser(1);   
+
     }
 
 
