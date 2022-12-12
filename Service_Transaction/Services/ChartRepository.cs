@@ -18,7 +18,7 @@ namespace Service_Transaction.Services
         }
 
 
-        public async Task<List<MonthlyTotalInOut>> GetMonthly_Total_InOut_ChartReport(int userId)
+        public async Task<MonthlyTotalInOutChartData> GetMonthly_Total_InOut_ChartReport(int userId)
         {
             List<MonthlyTotalInOut> returnData = new List<MonthlyTotalInOut>();
 
@@ -83,7 +83,21 @@ namespace Service_Transaction.Services
                     });
                 }       
             }
-            return returnData;
+
+            MonthlyTotalInOutChartData chartData = new MonthlyTotalInOutChartData();
+            chartData.TotalInData = new TotalInData();
+            chartData.TotalOutData = new TotalOutData();
+            
+            chartData.TotalInData.Name = "IN $";
+            chartData.TotalOutData.Name = "OUT $";
+
+            foreach (var rd in returnData)
+            {
+                chartData.TotalInData.InDatas.Add(rd.TotalIn);
+                chartData.TotalOutData.OutDatas.Add(rd.TotalOut);
+            }
+
+            return chartData;
         }
     }
 }

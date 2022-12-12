@@ -160,8 +160,8 @@
 
 
     // chart-data
-    // List<MonthlyTotalInOut>
-    private List<MonthlyTotalInOut> chartDatas = new List<MonthlyTotalInOut>();
+    // MonthlyTotalInOutChartData
+    private MonthlyTotalInOutChartData chartDatas = new MonthlyTotalInOutChartData();
     private async Task GetChartDatas(UserList selectedUser)
     {
         chartDatas = await chartService.GetMonthly_Total_InOut_ChartReport(selectedUser.UserId);

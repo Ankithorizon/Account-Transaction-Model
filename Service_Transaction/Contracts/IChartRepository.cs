@@ -8,6 +8,6 @@ namespace Service_Transaction.Contracts
 {
     public interface IChartRepository
     {
-        Task<List<MonthlyTotalInOut>> GetMonthly_Total_InOut_ChartReport(int userId);
+        Task<MonthlyTotalInOutChartData> GetMonthly_Total_InOut_ChartReport(int userId);
     }
 }
