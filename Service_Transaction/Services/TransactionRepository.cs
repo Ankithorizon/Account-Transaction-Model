@@ -79,12 +79,22 @@ namespace Service_Transaction.Services
             {
                 var user = await appDbContext.Users.Include(x => x.Accounts)
                           .ThenInclude(ac => ac.Transactions)
-                          .Where(x => x.UserId == userId).FirstOrDefaultAsync();
+                          .Where(x => x.UserId == userId && userId!=0).FirstOrDefaultAsync();
                 if (user != null)
                 {
                     foreach (var account in user.Accounts)
                     {
                         foreach (var tr in account.Transactions)
+                        {
+                            datas.Add(tr);
+                        }
+                    }
+                }
+                else
+                {
+                    if (userId == 0)
+                    {
+                        foreach (var tr in appDbContext.Transactions)
                         {
                             datas.Add(tr);
                         }

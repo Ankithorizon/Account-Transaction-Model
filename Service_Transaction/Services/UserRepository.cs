@@ -60,6 +60,11 @@ namespace Service_Transaction.Services
         public async Task<List<UserList>> GetUserList()
         {
             List<UserList> datas = new List<UserList>();
+            datas.Add(new UserList()
+            {
+                 UserId=0,
+                  UserName="All-Transactions"
+            });
 
             var users = await appDbContext.Users.ToListAsync();
             if (users != null && users.Count() > 0)
