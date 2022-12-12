@@ -103,8 +103,14 @@ namespace Service_Transaction.Services
             }
             catch(Exception ex)
             {
-            }          
-            return datas;
+            }
+
+
+            var datas_ = datas.OrderByDescending(x=>x.TransactionDate);
+
+            return datas_.ToList();
+
+            // return datas;
         }
     }
 }

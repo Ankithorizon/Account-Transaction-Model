@@ -121,7 +121,7 @@ using Service_Transaction.DTO;
     // very first load of table for transactions,,, displays number of rows
     // in table
     // @ref="table" code in table configuration
-    private MudTable<Transaction> table;
+    private MudTable<Transaction> table = new MudTable<Transaction>();
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
         table.SetRowsPerPage(50);
@@ -148,7 +148,7 @@ using Service_Transaction.DTO;
     protected override async Task OnInitializedAsync()
     {
         users = await userService.GetUserList();
-        transactions = await transactionService.GetTransactionsByUser(1);
+        transactions = await transactionService.GetTransactionsByUser(0);
     }
 
 
