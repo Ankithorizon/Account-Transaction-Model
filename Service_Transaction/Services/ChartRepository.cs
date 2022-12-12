@@ -24,38 +24,65 @@ namespace Service_Transaction.Services
 
             List<Transaction> transactionsByUser = await transactionService.GetTransactionsByUser(userId);
 
-            var results = (from p in transactionsByUser
-                           where p.TransactionStatus == (int)TransactionStatus.SUCCESS
-                           group p by new
-                           {
-                               Month = p.TransactionDate.Month,
-                               TranType = p.TransactionType
-                           } into g
-                           select new
-                           {
-                               Month = g.Key.Month,
-                               TranType = g.Key.TranType,
-                               Total = g.Sum(x => x.TransactionAmount)
-                           }
-                          ).AsEnumerable()
-                    .Select(g => new
-                    {
-                        Month = g.Month.ToString(),
-                        TranType = g.TranType,
-                        Total = g.Total
-                    });
 
-
-            foreach(var data in results)
+            for(int i = 1; i <= 12; i++)
             {
-                returnData.Add(new MonthlyTotalInOut()
-                {
-                     MonthName = data.Month,
-                      TotalIn = data.TranType==(int)TransactionType.IN ? data.Total : 0,
-                       TotalOut = data.TranType == (int)TransactionType.OUT ? data.Total : 0
-                });
-            }
+                var results = transactionsByUser
+                                    .Where(x => x.TransactionDate.Month == i && x.TransactionStatus == (int)TransactionStatus.SUCCESS);
 
+                if(results!=null && results.Count() > 0)
+                {
+                    // in-out-transactions
+                    MonthlyTotalInOut data = new MonthlyTotalInOut();
+                    data.MonthNumber = i;
+
+                    // in-transactions
+                    var totalInTrs = results
+                                        .Where(y => y.TransactionType == (int)TransactionType.IN);
+                    if(totalInTrs != null && totalInTrs.Count() > 0)
+                    {
+                        decimal totalIn_ = 0;
+                        foreach(var tr in totalInTrs)
+                        {
+                            totalIn_ += tr.TransactionAmount;
+                        }
+                        data.TotalIn = totalIn_;
+                    }
+                    else
+                    {
+                        data.TotalIn = 0;
+                    }
+
+
+                    // out-transactions
+                    var totalOutTrs = results
+                                      .Where(y => y.TransactionType == (int)TransactionType.OUT);
+                    if (totalOutTrs != null && totalOutTrs.Count() > 0)
+                    {
+                        decimal totalOut_ = 0;
+                        foreach (var tr in totalOutTrs)
+                        {
+                            totalOut_ += tr.TransactionAmount;
+                        }
+                        data.TotalOut = totalOut_;
+                    }
+                    else
+                    {
+                        data.TotalOut = 0;
+                    }
+
+                    returnData.Add(data);
+                }
+                else
+                {
+                    returnData.Add(new MonthlyTotalInOut()
+                    {
+                         MonthNumber = i,
+                          TotalIn = 0,
+                           TotalOut = 0
+                    });
+                }       
+            }
             return returnData;
         }
     }
