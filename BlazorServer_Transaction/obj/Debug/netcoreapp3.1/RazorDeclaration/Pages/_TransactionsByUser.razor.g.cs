@@ -153,12 +153,23 @@ using Service_Transaction.DTO;
 
 
     // chart-data
-    // List<MonthlyTotalInOut>
-    private List<MonthlyTotalInOut> chartDatas = new List<MonthlyTotalInOut>();
+    // MonthlyTotalInOutChartData
+    private MonthlyTotalInOutChartData chartDatas = new MonthlyTotalInOutChartData();
+    private static string InLabel = "IN $";
+    private static List<decimal> InDatas = chartDatas.TotalInData.InDatas;
+
     private async Task GetChartDatas(UserList selectedUser)
     {
         chartDatas = await chartService.GetMonthly_Total_InOut_ChartReport(selectedUser.UserId);
     }
+    public List<ChartSeries> Series = new List<ChartSeries>()
+    {
+       
+        new ChartSeries() { Name = "Germany", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31 } },
+        new ChartSeries() { Name = "Sweden", Data = new double[] { 8, 6, 11, 13, 4, 16, 10, 16, 18 } },
+    };
+    public string[] XAxisLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep" };
+
 
 #line default
 #line hidden

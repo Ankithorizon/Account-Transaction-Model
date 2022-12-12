@@ -85,16 +85,21 @@ namespace Service_Transaction.Services
             }
 
             MonthlyTotalInOutChartData chartData = new MonthlyTotalInOutChartData();
-            chartData.TotalInData = new TotalInData();
-            chartData.TotalOutData = new TotalOutData();
-            
-            chartData.TotalInData.Name = "IN $";
-            chartData.TotalOutData.Name = "OUT $";
+            TotalInData totalInData = new TotalInData();
+            TotalOutData totalOutData = new TotalOutData();
+
+            chartData.TotalInData = totalInData;
+            chartData.TotalOutData = totalOutData;
+
+            totalInData.Name = "IN $";
+            totalOutData.Name = "OUT $";
+            totalInData.InDatas = new List<decimal>();
+            totalOutData.OutDatas = new List<decimal>();
 
             foreach (var rd in returnData)
             {
-                chartData.TotalInData.InDatas.Add(rd.TotalIn);
-                chartData.TotalOutData.OutDatas.Add(rd.TotalOut);
+                totalInData.InDatas.Add(rd.TotalIn);
+                totalOutData.OutDatas.Add(rd.TotalOut);
             }
 
             return chartData;
