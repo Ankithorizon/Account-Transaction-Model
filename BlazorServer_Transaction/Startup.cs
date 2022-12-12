@@ -58,6 +58,7 @@ namespace BlazorServer_Transaction
             services.AddScoped<IPayeeRepository, PayeeRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
+            services.AddScoped<IChartRepository, ChartRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -4,17 +4,21 @@
 <!-- service project connector -->
 @inject Service_Transaction.Contracts.ITransactionRepository transactionService
 @inject Service_Transaction.Contracts.IUserRepository userService
+@inject Service_Transaction.Contracts.IChartRepository chartService
+
 @using EFCore_Transaction.Models
 @using Service_Transaction.DTO
 @inject MudBlazor.ISnackbar snackBar
 
 <style>
-    .filterDiv{
-        padding-top:30px;
+    .filterDiv {
+        padding-top: 30px;
     }
-    .filterBtn{
-        padding-top:20px;
+
+    .filterBtn {
+        padding-top: 20px;
     }
+
     .noData {
         color: red;
         font-size: x-large;
@@ -27,7 +31,7 @@
     <MudGrid>
         <MudItem xs="3">
             <MudSelect @bind-Value="selectedUser"
-                       AnchorOrigin="Origin.BottomCenter"                      
+                       AnchorOrigin="Origin.BottomCenter"
                        HelperText="Select - User"
                        AdornmentColor="Color.Secondary">
                 @foreach (var data in users)
@@ -35,16 +39,24 @@
                     <MudSelectItem Value="@data">@data.UserName</MudSelectItem>
                 }
             </MudSelect>
-        </MudItem>     
+        </MudItem>
         <MudItem xs="3">
             <div class="filterBtn">
                 <MudButton Variant="Variant.Filled"
                            @onclick="@( (x) => SetTransactionsForSelectedUser(selectedUser))"
                            StartIcon="@Icons.Material.Filled.Search"
                            Color="Color.Success">Get Transactions!</MudButton>
-            </div>          
+            </div>
         </MudItem>
-    </MudGrid>    
+        <MudItem xs="3">
+            <div class="filterBtn">
+                <MudButton Variant="Variant.Filled"
+                           @onclick="@( (x) => GetChartDatas(selectedUser))"
+                           StartIcon="@Icons.Material.Filled.BarChart"
+                           Color="Color.Success">Display Chart!</MudButton>
+            </div>
+        </MudItem>
+    </MudGrid>
 </div>
 <p></p>
 <MudPaper Square="true" Class="d-flex justify-space-around">
@@ -103,7 +115,7 @@
 
 @code {
 
-    // select list  
+    // select list
     private List<UserList> users = new List<UserList>();
     private UserList selectedUser = new UserList();
 
@@ -143,9 +155,16 @@
     protected override async Task OnInitializedAsync()
     {
         users = await userService.GetUserList();
-        transactions = await transactionService.GetTransactionsByUser(1);   
-
+        transactions = await transactionService.GetTransactionsByUser(1);
     }
 
+
+    // chart-data
+    // List<MonthlyTotalInOut>
+    private List<MonthlyTotalInOut> chartDatas = new List<MonthlyTotalInOut>();
+    private async Task GetChartDatas(UserList selectedUser)
+    {
+        chartDatas = await chartService.GetMonthly_Total_InOut_ChartReport(selectedUser.UserId);
+    }
 }
 

@@ -83,14 +83,14 @@ using MudBlazor;
 #line hidden
 #nullable disable
 #nullable restore
-#line 7 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
+#line 9 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
 using EFCore_Transaction.Models;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 8 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
+#line 10 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
 using Service_Transaction.DTO;
 
 #line default
@@ -105,10 +105,10 @@ using Service_Transaction.DTO;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 104 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
+#line 116 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
        
 
-    // select list  
+    // select list
     private List<UserList> users = new List<UserList>();
     private UserList selectedUser = new UserList();
 
@@ -148,15 +148,23 @@ using Service_Transaction.DTO;
     protected override async Task OnInitializedAsync()
     {
         users = await userService.GetUserList();
-        transactions = await transactionService.GetTransactionsByUser(1);   
-
+        transactions = await transactionService.GetTransactionsByUser(1);
     }
 
+
+    // chart-data
+    // List<MonthlyTotalInOut>
+    private List<MonthlyTotalInOut> chartDatas = new List<MonthlyTotalInOut>();
+    private async Task GetChartDatas(UserList selectedUser)
+    {
+        chartDatas = await chartService.GetMonthly_Total_InOut_ChartReport(selectedUser.UserId);
+    }
 
 #line default
 #line hidden
 #nullable disable
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private MudBlazor.ISnackbar snackBar { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private Service_Transaction.Contracts.IChartRepository chartService { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private Service_Transaction.Contracts.IUserRepository userService { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private Service_Transaction.Contracts.ITransactionRepository transactionService { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private BlazorServer_Transaction.ApiCallHelpers.TransactionApiClient transactionApi { get; set; }
