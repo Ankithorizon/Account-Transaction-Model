@@ -82,6 +82,69 @@ using MudBlazor;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 14 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 15 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 16 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common.Axes;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 17 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common.Axes.Ticks;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 18 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common.Enums;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 19 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common.Handlers;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 20 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common.Time;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 21 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Util;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 22 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Interop;
+
+#line default
+#line hidden
+#nullable disable
     public partial class _Imports : System.Object
     {
         #pragma warning disable 1998

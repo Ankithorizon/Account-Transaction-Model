@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "Z8r+0Fpuhc9gC/4hff6iMTFkmS7fcEcK4P+UYRQcQlt3/549oH4KsCGKrWYtme1wjZfdvt3ma4poFApnCU5vnQ==",
+  "dgSpecHash": "f/GQDq3uBYNAfGxJNSyEqg3ccZfK0rDO0FHQTzJpiOzEwABpZG9TkZa/Ddv3rW+6JLl7osl4frsiTzs9KZwJvA==",
   "success": true,
   "projectFilePath": "C:\\Transaction-Model\\APITransaction\\BlazorServer_Transaction\\BlazorServer_Transaction.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\ankit_2\\.nuget\\packages\\chartjs.blazor\\1.0.1\\chartjs.blazor.1.0.1.nupkg.sha512",
+    "C:\\Users\\ankit_2\\.nuget\\packages\\chartjs.blazor.fork\\2.0.2\\chartjs.blazor.fork.2.0.2.nupkg.sha512",
     "C:\\Users\\ankit_2\\.nuget\\packages\\microsoft.aspnetcore.authorization\\3.1.8\\microsoft.aspnetcore.authorization.3.1.8.nupkg.sha512",
     "C:\\Users\\ankit_2\\.nuget\\packages\\microsoft.aspnetcore.components\\3.1.8\\microsoft.aspnetcore.components.3.1.8.nupkg.sha512",
     "C:\\Users\\ankit_2\\.nuget\\packages\\microsoft.aspnetcore.components.analyzers\\3.1.8\\microsoft.aspnetcore.components.analyzers.3.1.8.nupkg.sha512",

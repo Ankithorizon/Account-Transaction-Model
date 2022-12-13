@@ -1,0 +1,226 @@
+﻿@page "/transactionsByUser"
+<!-- web api connector -->
+@inject BlazorServer_Transaction.ApiCallHelpers.TransactionApiClient transactionApi
+<!-- service project connector -->
+@inject Service_Transaction.Contracts.ITransactionRepository transactionService
+@inject Service_Transaction.Contracts.IUserRepository userService
+@inject Service_Transaction.Contracts.IChartRepository chartService
+
+@using EFCore_Transaction.Models
+@using Service_Transaction.DTO
+@inject MudBlazor.ISnackbar snackBar
+
+<style>
+    .filterDiv {
+        padding-top: 30px;
+    }
+
+    .filterBtn {
+        padding-top: 20px;
+    }
+
+    .noData {
+        color: red;
+        font-size: x-large;
+        font-weight: bold;
+    }
+</style>
+<h1>Transactions By User!</h1>
+
+<div class="container">
+    <div>
+        <MudChart ChartType="ChartType.Line"                  
+                  ChartSeries="@Series"
+                  @bind-SelectedIndex="Index"
+                  XAxisLabels="@XAxisLabels"
+                  Height="100%"
+                  Width="100%">        
+        </MudChart>
+    </div>
+</div>
+<p></p>
+<hr />
+<p></p>
+<div class="container filterDiv">
+    <MudGrid>
+        <MudItem xs="3">
+            <MudSelect @bind-Value="selectedUser"
+                       AnchorOrigin="Origin.BottomCenter"
+                       HelperText="Select - User"
+                       AdornmentColor="Color.Secondary">
+                @foreach (var data in users)
+                {
+                    <MudSelectItem Value="@data">@data.UserName</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="3">
+            <div class="filterBtn">
+                <MudButton Variant="Variant.Filled"
+                           @onclick="@( (x) => SetTransactionsForSelectedUser(selectedUser))"
+                           StartIcon="@Icons.Material.Filled.Search"
+                           Color="Color.Success">Get Transactions!</MudButton>
+            </div>
+        </MudItem>
+        <MudItem xs="3">
+            <div class="filterBtn">
+                <MudButton Variant="Variant.Filled"
+                           @onclick="@( (x) => GetChartDatas(selectedUser))"
+                           StartIcon="@Icons.Material.Filled.BarChart"
+                           Color="Color.Success">Display Chart!</MudButton>
+            </div>
+        </MudItem>
+    </MudGrid>
+</div>
+<p></p>
+<MudPaper Square="true" Class="d-flex justify-space-around">
+    <!-- transactions -->
+    @if (transactions != null && transactions.Count() > 0)
+    {
+        <MudTable Items="@transactions"
+                  @ref="table"
+                  Breakpoint="Breakpoint.Sm"
+                  MultiSelection="true"
+                  Hover="@hover">
+            <HeaderContent>
+                <MudTh>#</MudTh>
+                <MudTh>Payee</MudTh>
+                <MudTh>Account</MudTh>
+                <MudTh>Type</MudTh>
+                <MudTh>Amount</MudTh>
+                <MudTh>Status</MudTh>
+                <MudTh>Current Balance</MudTh>
+                <MudTh>Last Balance</MudTh>
+                <MudTh>Ref-Code</MudTh>
+                <MudTh>Date</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="TransactionId">@context.TransactionId</MudTd>
+                <MudTd DataLabel="PayeeId">@context.PayeeId</MudTd>
+                <MudTd DataLabel="AccountId">@context.AccountId</MudTd>
+                <MudTd DataLabel="TransactionType">@GetTransactionType(context.TransactionType)</MudTd>
+                <MudTd DataLabel="TransactionAmount">@context.TransactionAmount</MudTd>
+                <MudTd DataLabel="TransactionStatus">@GetTransactionStatus(context.TransactionStatus)</MudTd>
+                <MudTd DataLabel="CurrentBalance">@context.CurrentBalance</MudTd>
+                <MudTd DataLabel="LastBalance">@context.LastBalance</MudTd>
+                <MudTd DataLabel="RefCode">@context.RefCode</MudTd>
+                <MudTd DataLabel="TransactionDate">@Convert.ToDateTime(@context.TransactionDate).ToString("dd, MMM yy")</MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager PageSizeOptions="new int[] { 50, 100 }" />
+            </PagerContent>
+        </MudTable>
+    }
+    else
+    {
+        <MudPaper>
+            <MudCard>
+                <MudCardContent>
+                    <span class="noData">
+                        Transactions Not Available!
+                    </span>
+                </MudCardContent>
+            </MudCard>
+        </MudPaper>
+    }
+
+</MudPaper>
+
+
+@code {
+
+    // select list
+    private List<UserList> users = new List<UserList>();
+    private UserList selectedUser = new UserList();
+
+
+    public Array transactionTypes = Enum.GetValues(typeof(TransactionType));
+    public Array transactionStatus = Enum.GetValues(typeof(TransactionStatus));
+
+    private bool hover = true;
+
+    // very first load of table for transactions,,, displays number of rows
+    // in table
+    // @ref="table" code in table configuration
+    private MudTable<Transaction> table = new MudTable<Transaction>();
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        table.SetRowsPerPage(50);
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    private List<Transaction> transactions = new List<Transaction>();
+
+    private string GetTransactionType(int trType)
+    {
+        return transactionTypes.GetValue(trType).ToString();
+    }
+    private string GetTransactionStatus(int trStatus)
+    {
+        return transactionStatus.GetValue(trStatus).ToString();
+    }
+
+    private async Task SetTransactionsForSelectedUser(UserList selectedUser)
+    {
+        transactions = await transactionService.GetTransactionsByUser(selectedUser.UserId);
+
+        chartDatas = await chartService.GetMonthly_Total_InOut_ChartReport(selectedUser.UserId);
+
+        CreateActualChart();
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await userService.GetUserList();
+        transactions = await transactionService.GetTransactionsByUser(0);
+    }
+
+
+    // chart-data
+    // MonthlyTotalInOutChartData
+    private MonthlyTotalInOutChartData chartDatas;
+    private static string InLabel = "IN $K";
+    private static string OutLabel = "OUT $K";
+    private int Index = -1;
+
+    private async Task GetChartDatas(UserList selectedUser)
+    {
+        chartDatas = await chartService.GetMonthly_Total_InOut_ChartReport(selectedUser.UserId);
+
+        CreateActualChart();
+    }
+    public string[] XAxisLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
+    public List<ChartSeries> Series = new List<ChartSeries>()
+    {
+        new ChartSeries() { Name = "Series 1", Data = new double[] { 90, 79, 72, 69, 62, 62, 55, 65, 70, 10, 10, 10 } },
+        new ChartSeries() { Name = "Series 2", Data = new double[] { 10, 41, 35, 51, 49, 62, 69, 91, 148, 10, 10, 10 } },
+    };
+    public void CreateActualChart()
+    {
+        var new_series = new List<ChartSeries>()
+        {
+            new ChartSeries() { Name = InLabel, Data = new double[12] },
+            new ChartSeries() { Name = OutLabel, Data = new double[12] },
+        };
+        var ary = new double[chartDatas.TotalInData.InDatas.Count];
+        for (var ii = 0; ii < chartDatas.TotalInData.InDatas.Count; ii++)
+        {
+            ary[ii] = Convert.ToDouble(chartDatas.TotalInData.InDatas[ii]/1000);
+        }
+        var aryOut = new double[chartDatas.TotalOutData.OutDatas.Count];
+        for (var ii = 0; ii < chartDatas.TotalOutData.OutDatas.Count; ii++)
+        {
+            aryOut[ii] = Convert.ToDouble(chartDatas.TotalOutData.OutDatas[ii]/1000);
+        }
+        for (int i = 0; i < 11; i++)
+        {
+            new_series[0].Data[i] = ary[i];
+            new_series[1].Data[i] = aryOut[i];
+        }
+        Series = new_series;
+        StateHasChanged();
+    }
+}
+

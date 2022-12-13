@@ -82,6 +82,76 @@ using MudBlazor;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 14 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 15 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 16 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common.Axes;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 17 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common.Axes.Ticks;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 18 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common.Enums;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 19 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common.Handlers;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 20 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common.Time;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 21 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Util;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 22 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Interop;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 2 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\Index.razor"
+using ChartJs.Blazor.PieChart;
+
+#line default
+#line hidden
+#nullable disable
     [Microsoft.AspNetCore.Components.RouteAttribute("/")]
     public partial class Index : Microsoft.AspNetCore.Components.ComponentBase
     {
@@ -91,9 +161,47 @@ using MudBlazor;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 41 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\Index.razor"
+#line 50 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\Index.razor"
       
     Color _color = Color.Primary;
+
+    private PieConfig _config;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _config = new PieConfig
+        {
+            Options = new PieOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = "ChartJs.Blazor Pie Chart"
+                }
+            }
+        };
+
+        foreach (string color in new[] { "Red", "Yellow", "Green", "Blue" })
+        {
+            _config.Data.Labels.Add(color);
+        }
+
+        PieDataset<int> dataset = new PieDataset<int>(new[] { 6, 5, 3, 7 })
+        {
+            BackgroundColor = new[]
+            {
+            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            ColorUtil.ColorHexString(255, 205, 86), // Slice 2 aka "Yellow"
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+            ColorUtil.ColorHexString(54, 162, 235), // Slice 4 aka "Blue"
+        }
+        };
+
+        _config.Data.Datasets.Add(dataset);
+    }
+
+
 
 #line default
 #line hidden

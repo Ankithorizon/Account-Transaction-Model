@@ -83,6 +83,69 @@ using MudBlazor;
 #line hidden
 #nullable disable
 #nullable restore
+#line 14 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 15 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 16 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common.Axes;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 17 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common.Axes.Ticks;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 18 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common.Enums;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 19 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common.Handlers;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 20 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Common.Time;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 21 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Util;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 22 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\_Imports.razor"
+using ChartJs.Blazor.Interop;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
 #line 9 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
 using EFCore_Transaction.Models;
 
@@ -105,7 +168,7 @@ using Service_Transaction.DTO;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 116 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
+#line 124 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
        
 
     // select list
@@ -142,6 +205,10 @@ using Service_Transaction.DTO;
     private async Task SetTransactionsForSelectedUser(UserList selectedUser)
     {
         transactions = await transactionService.GetTransactionsByUser(selectedUser.UserId);
+
+        chartDatas = await chartService.GetMonthly_Total_InOut_ChartReport(selectedUser.UserId);
+
+        CreateActualChart();
     }
 
 
@@ -154,22 +221,49 @@ using Service_Transaction.DTO;
 
     // chart-data
     // MonthlyTotalInOutChartData
-    private MonthlyTotalInOutChartData chartDatas = new MonthlyTotalInOutChartData();
-    private static string InLabel = "IN $";
-    private static List<decimal> InDatas = chartDatas.TotalInData.InDatas;
+    private MonthlyTotalInOutChartData chartDatas;
+    private static string InLabel = "IN $K";
+    private static string OutLabel = "OUT $K";
+    private int Index = -1;
 
     private async Task GetChartDatas(UserList selectedUser)
     {
         chartDatas = await chartService.GetMonthly_Total_InOut_ChartReport(selectedUser.UserId);
+
+        CreateActualChart();
     }
+    public string[] XAxisLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
     public List<ChartSeries> Series = new List<ChartSeries>()
     {
-       
-        new ChartSeries() { Name = "Germany", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31 } },
-        new ChartSeries() { Name = "Sweden", Data = new double[] { 8, 6, 11, 13, 4, 16, 10, 16, 18 } },
+        new ChartSeries() { Name = "Series 1", Data = new double[] { 90, 79, 72, 69, 62, 62, 55, 65, 70, 10, 10, 10 } },
+        new ChartSeries() { Name = "Series 2", Data = new double[] { 10, 41, 35, 51, 49, 62, 69, 91, 148, 10, 10, 10 } },
     };
-    public string[] XAxisLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep" };
-
+    public void CreateActualChart()
+    {
+        var new_series = new List<ChartSeries>()
+        {
+            new ChartSeries() { Name = InLabel, Data = new double[12] },
+            new ChartSeries() { Name = OutLabel, Data = new double[12] },
+        };
+        var ary = new double[chartDatas.TotalInData.InDatas.Count];
+        for (var ii = 0; ii < chartDatas.TotalInData.InDatas.Count; ii++)
+        {
+            ary[ii] = Convert.ToDouble(chartDatas.TotalInData.InDatas[ii]/1000);
+        }
+        var aryOut = new double[chartDatas.TotalOutData.OutDatas.Count];
+        for (var ii = 0; ii < chartDatas.TotalOutData.OutDatas.Count; ii++)
+        {
+            aryOut[ii] = Convert.ToDouble(chartDatas.TotalOutData.OutDatas[ii]/1000);
+        }
+        for (int i = 0; i < 11; i++)
+        {
+            new_series[0].Data[i] = ary[i];
+            new_series[1].Data[i] = aryOut[i];
+        }
+        Series = new_series;
+        StateHasChanged();
+    }
 
 #line default
 #line hidden
