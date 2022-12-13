@@ -10,6 +10,9 @@
 @using Service_Transaction.DTO
 @inject MudBlazor.ISnackbar snackBar
 
+@using ChartJs.Blazor.BarChart
+
+
 <style>
     .filterDiv {
         padding-top: 30px;
@@ -27,9 +30,24 @@
 </style>
 <h1>Transactions By User!</h1>
 
+
+<div>
+    <ChartJs.Blazor.Chart Config="_config"></ChartJs.Blazor.Chart>
+</div>
+<p></p>
+<hr />
+<p></p>
+
+
 <div class="container">
     <div>
-      
+        @*<MudChart ChartType="MudBlazor.ChartType.Line"
+                  ChartSeries="@Series"
+                  @bind-SelectedIndex="Index"
+                  XAxisLabels="@XAxisLabels"
+                  Height="100%"
+                  Width="100%">
+        </MudChart>*@
     </div>
 </div>
 <p></p>
@@ -52,16 +70,8 @@
             <div class="filterBtn">
                 <MudButton Variant="Variant.Filled"
                            @onclick="@( (x) => SetTransactionsForSelectedUser(selectedUser))"
-                           StartIcon="@Icons.Material.Filled.Search"
-                           Color="Color.Success">Get Transactions!</MudButton>
-            </div>
-        </MudItem>
-        <MudItem xs="3">
-            <div class="filterBtn">
-                <MudButton Variant="Variant.Filled"
-                           @onclick="@( (x) => GetChartDatas(selectedUser))"
                            StartIcon="@Icons.Material.Filled.BarChart"
-                           Color="Color.Success">Display Chart!</MudButton>
+                           Color="Color.Success">Get Transactions!</MudButton>
             </div>
         </MudItem>
     </MudGrid>
@@ -160,12 +170,34 @@
 
         chartDatas = await chartService.GetMonthly_Total_InOut_ChartReport(selectedUser.UserId);
 
-        CreateActualChart();
+        // CreateActualChart();
+
+        CreateChartJsBlazorBarChart();
     }
 
 
     protected override async Task OnInitializedAsync()
     {
+        // chartjs.mudblazor
+        _config = new BarConfig
+        {
+            Options = new BarOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = "Bar Chart"
+                }
+            }
+        };
+        foreach (string month in new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" })
+        {
+            _config.Data.Labels.Add(month);
+        }
+
+
+
         users = await userService.GetUserList();
         transactions = await transactionService.GetTransactionsByUser(0);
     }
@@ -178,18 +210,12 @@
     private static string OutLabel = "OUT $K";
     private int Index = -1;
 
-    private async Task GetChartDatas(UserList selectedUser)
-    {
-        chartDatas = await chartService.GetMonthly_Total_InOut_ChartReport(selectedUser.UserId);
-
-        CreateActualChart();
-    }
     public string[] XAxisLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 
     public List<ChartSeries> Series = new List<ChartSeries>()
     {
-        new ChartSeries() { Name = "Series 1", Data = new double[] { 90, 79, 72, 69, 62, 62, 55, 65, 70, 10, 10, 10 } },
-        new ChartSeries() { Name = "Series 2", Data = new double[] { 10, 41, 35, 51, 49, 62, 69, 91, 148, 10, 10, 10 } },
+        new ChartSeries() { Name = InLabel, Data = new double[] { 90, 79, 72, 69, 62, 62, 55, 65, 70, 10, 10, 10 } },
+        new ChartSeries() { Name = OutLabel, Data = new double[] { 10, 41, 35, 51, 49, 62, 69, 91, 148, 10, 10, 10 } },
     };
     public void CreateActualChart()
     {
@@ -201,12 +227,12 @@
         var ary = new double[chartDatas.TotalInData.InDatas.Count];
         for (var ii = 0; ii < chartDatas.TotalInData.InDatas.Count; ii++)
         {
-            ary[ii] = Convert.ToDouble(chartDatas.TotalInData.InDatas[ii]/1000);
+            ary[ii] = Convert.ToDouble(chartDatas.TotalInData.InDatas[ii] / 1000);
         }
         var aryOut = new double[chartDatas.TotalOutData.OutDatas.Count];
         for (var ii = 0; ii < chartDatas.TotalOutData.OutDatas.Count; ii++)
         {
-            aryOut[ii] = Convert.ToDouble(chartDatas.TotalOutData.OutDatas[ii]/1000);
+            aryOut[ii] = Convert.ToDouble(chartDatas.TotalOutData.OutDatas[ii] / 1000);
         }
         for (int i = 0; i < 11; i++)
         {
@@ -216,5 +242,66 @@
         Series = new_series;
         StateHasChanged();
     }
+
+
+
+    // chartjs.mudblazor
+    private BarConfig _config;
+    public void CreateChartJsBlazorBarChart()
+    {
+        var ary = new double[chartDatas.TotalInData.InDatas.Count];
+        for (var ii = 0; ii < chartDatas.TotalInData.InDatas.Count; ii++)
+        {
+            ary[ii] = Convert.ToDouble(chartDatas.TotalInData.InDatas[ii] / 1000);
+        }
+        var aryOut = new double[chartDatas.TotalOutData.OutDatas.Count];
+        for (var ii = 0; ii < chartDatas.TotalOutData.OutDatas.Count; ii++)
+        {
+            aryOut[ii] = Convert.ToDouble(chartDatas.TotalOutData.OutDatas[ii] / 1000);
+        }
+        BarDataset<double> datasetIn = new BarDataset<double>(ary);
+        BarDataset<double> datasetOut = new BarDataset<double>(aryOut);
+
+        datasetIn.BackgroundColor = new[]
+        {
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+        };
+        datasetIn.Label = "IN $";
+
+
+        datasetOut.BackgroundColor = new[]
+        {
+            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+        };
+        datasetOut.Label = "OUT $";
+
+
+        _config.Data.Datasets.Add(datasetIn);
+        _config.Data.Datasets.Add(datasetOut);
+    }
+
+
 }
 

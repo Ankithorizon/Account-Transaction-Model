@@ -145,20 +145,6 @@ using ChartJs.Blazor.Interop;
 #line default
 #line hidden
 #nullable disable
-#nullable restore
-#line 2 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\Index.razor"
-using ChartJs.Blazor.PieChart;
-
-#line default
-#line hidden
-#nullable disable
-#nullable restore
-#line 3 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\Index.razor"
-using ChartJs.Blazor.BarChart;
-
-#line default
-#line hidden
-#nullable disable
     [Microsoft.AspNetCore.Components.RouteAttribute("/")]
     public partial class Index : Microsoft.AspNetCore.Components.ComponentBase
     {
@@ -168,74 +154,9 @@ using ChartJs.Blazor.BarChart;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 53 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\Index.razor"
+#line 42 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\Index.razor"
       
-        Color _color = Color.Primary;
-
-    //private PieConfig _config;
-
-        //protected override async Task OnInitializedAsync()
-        //{
-        //    _config = new PieConfig
-        //    {
-        //        Options = new PieOptions
-        //        {
-        //            Responsive = true,
-        //            Title = new OptionsTitle
-        //            {
-        //                Display = true,
-        //                Text = "ChartJs.Blazor Pie Chart"
-        //            }
-        //        }
-        //    };
-
-        //    foreach (string color in new[] { "Red", "Yellow", "Green", "Blue" })
-        //    {
-        //        _config.Data.Labels.Add(color);
-        //    }
-
-        //    PieDataset<int> dataset = new PieDataset<int>(new[] { 6, 5, 3, 7 })
-        //    {
-        //        BackgroundColor = new[]
-        //        {
-        //        ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
-        //        ColorUtil.ColorHexString(255, 205, 86), // Slice 2 aka "Yellow"
-        //        ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
-        //        ColorUtil.ColorHexString(54, 162, 235), // Slice 4 aka "Blue"
-        //    }
-        //    };
-
-        //    _config.Data.Datasets.Add(dataset);
-        //}
-
-
-    private BarConfig _config;
-    protected override void OnInitialized()
-    {
-        _config = new BarConfig
-        {
-            Options = new BarOptions
-            {
-                Responsive = true,
-                Title = new OptionsTitle
-                {
-                    Display = true,
-                    Text = "Bar Chart"
-                }
-            }
-        };
-
-        foreach (string color in new[] { "Red", "Green" })
-        {
-            _config.Data.Labels.Add(color);
-        }
-
-        BarDataset<int> datasetIn = new BarDataset<int>(new[] { 6, 5, 3, 7 });
-        BarDataset<int> datasetOut = new BarDataset<int>(new[] { 3, 7, 8, 2 });
-        _config.Data.Datasets.Add(datasetIn);
-        _config.Data.Datasets.Add(datasetOut);
-    }
-
+    Color _color = Color.Primary;
 
 #line default
 #line hidden
