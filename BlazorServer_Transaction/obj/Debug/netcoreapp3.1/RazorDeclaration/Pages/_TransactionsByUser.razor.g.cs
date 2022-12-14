@@ -203,8 +203,15 @@ using ChartJs.Blazor.LineChart;
     private MudTable<Transaction> table = new MudTable<Transaction>();
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
-        table.SetRowsPerPage(50);
-        return base.OnAfterRenderAsync(firstRender);
+        if (transactions != null && transactions.Count() > 0)
+        {
+            table.SetRowsPerPage(50);
+            return base.OnAfterRenderAsync(firstRender);
+        }
+        else
+        {
+            return base.OnAfterRenderAsync(firstRender);
+        }
     }
 
     private List<Transaction> transactions = new List<Transaction>();
