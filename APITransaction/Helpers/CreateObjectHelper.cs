@@ -198,7 +198,7 @@ namespace APITransaction.Helpers
         // TransactionDate
         public DateTime GetTransactionDate()
         {
-            int dateOffset = random.Next(-20, 20);
+            int dateOffset = random.Next(-200, 15);
             return DateTime.Now.AddDays(dateOffset);
         }
         // RefCode

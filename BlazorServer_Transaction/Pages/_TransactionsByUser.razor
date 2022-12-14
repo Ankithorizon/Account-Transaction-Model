@@ -11,6 +11,7 @@
 @inject MudBlazor.ISnackbar snackBar
 
 @using ChartJs.Blazor.BarChart
+@using ChartJs.Blazor.LineChart 
 
 
 <style>
@@ -32,15 +33,17 @@
 
 @if (showChart)
 {
-    <div>
-        <ChartJs.Blazor.Chart Config="_config"></ChartJs.Blazor.Chart>
-        <p></p>
-        <hr />
-        <p></p>
-    </div>  
+<div class="container">
+    <MudGrid>
+        <MudItem lg="6" md="12" sm="12" xs="12">
+            <ChartJs.Blazor.Chart Config="_config"></ChartJs.Blazor.Chart>
+        </MudItem>
+        <MudItem lg="6" md="12" sm="12" xs="12">
+            <ChartJs.Blazor.Chart Config="_configLine"></ChartJs.Blazor.Chart>
+        </MudItem>
+    </MudGrid>
+</div>  
 }
-
-
 
 <div class="container">
     <div>
@@ -180,6 +183,7 @@
 
         // chartjs.mudblazor chart
         CreateChartJsBlazorBarChart();
+        CreateChartJsBlazorLineChart();
     }
 
 
@@ -190,6 +194,7 @@
 
         // chartjs.mudblazor
         initChartJsMudBlazorBarChart();
+        initChartJsMudBlazorLineChart();
     }
 
 
@@ -238,6 +243,8 @@
 
     // chartjs.mudblazor
     private BarConfig _config;
+    private LineConfig _configLine;
+    // bar chart
     private void initChartJsMudBlazorBarChart()
     {
         _config = new BarConfig();
@@ -321,5 +328,53 @@
 
         showChart = true;
     }
+    // line chart
+    private void initChartJsMudBlazorLineChart()
+    {
+        _configLine = new LineConfig();
+        _configLine.Options = new LineOptions
+        {
+            Responsive = true,
+            Title = new OptionsTitle
+            {
+                Display = true,
+                Text = "Monthly $In v/s $Out"
+            }
+        };
+        foreach (string month in new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" })
+        {
+            _configLine.Data.Labels.Add(month);
+        }
+    }
+    public void CreateChartJsBlazorLineChart()
+    {
+        var ary = new decimal[chartDatas.TotalInData.InDatas.Count];
+        for (var ii = 0; ii < chartDatas.TotalInData.InDatas.Count; ii++)
+        {
+            ary[ii] = chartDatas.TotalInData.InDatas[ii];
+        }
+        var aryOut = new decimal[chartDatas.TotalOutData.OutDatas.Count];
+        for (var ii = 0; ii < chartDatas.TotalOutData.OutDatas.Count; ii++)
+        {
+            aryOut[ii] = chartDatas.TotalOutData.OutDatas[ii];
+        }
+        LineDataset<decimal> datasetIn = new LineDataset<decimal>(ary);
+        LineDataset<decimal> datasetOut = new LineDataset<decimal>(aryOut);
+
+        datasetIn.BackgroundColor = ColorUtil.ColorHexString(75, 192, 192);
+        datasetIn.Label = chartDatas.TotalInData.Name;
+
+
+        datasetOut.BackgroundColor = ColorUtil.ColorHexString(255, 99, 132);
+        datasetOut.Label = chartDatas.TotalOutData.Name;
+
+        _configLine.Data.Datasets.Clear();
+
+        _configLine.Data.Datasets.Add(datasetIn);
+        _configLine.Data.Datasets.Add(datasetOut);
+
+        showChart = true;
+    }
+
 }
 

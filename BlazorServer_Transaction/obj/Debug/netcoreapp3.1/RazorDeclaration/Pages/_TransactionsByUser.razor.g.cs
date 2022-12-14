@@ -166,6 +166,13 @@ using ChartJs.Blazor.BarChart;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 14 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
+using ChartJs.Blazor.LineChart;
+
+#line default
+#line hidden
+#nullable disable
     [Microsoft.AspNetCore.Components.RouteAttribute("/transactionsByUser")]
     public partial class _TransactionsByUser : Microsoft.AspNetCore.Components.ComponentBase
     {
@@ -175,7 +182,7 @@ using ChartJs.Blazor.BarChart;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 137 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
+#line 140 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
        
 
     private bool showChart = false;
@@ -222,6 +229,7 @@ using ChartJs.Blazor.BarChart;
 
         // chartjs.mudblazor chart
         CreateChartJsBlazorBarChart();
+        CreateChartJsBlazorLineChart();
     }
 
 
@@ -232,6 +240,7 @@ using ChartJs.Blazor.BarChart;
 
         // chartjs.mudblazor
         initChartJsMudBlazorBarChart();
+        initChartJsMudBlazorLineChart();
     }
 
 
@@ -280,6 +289,8 @@ using ChartJs.Blazor.BarChart;
 
     // chartjs.mudblazor
     private BarConfig _config;
+    private LineConfig _configLine;
+    // bar chart
     private void initChartJsMudBlazorBarChart()
     {
         _config = new BarConfig();
@@ -363,6 +374,54 @@ using ChartJs.Blazor.BarChart;
 
         showChart = true;
     }
+    // line chart
+    private void initChartJsMudBlazorLineChart()
+    {
+        _configLine = new LineConfig();
+        _configLine.Options = new LineOptions
+        {
+            Responsive = true,
+            Title = new OptionsTitle
+            {
+                Display = true,
+                Text = "Monthly $In v/s $Out"
+            }
+        };
+        foreach (string month in new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" })
+        {
+            _configLine.Data.Labels.Add(month);
+        }
+    }
+    public void CreateChartJsBlazorLineChart()
+    {
+        var ary = new decimal[chartDatas.TotalInData.InDatas.Count];
+        for (var ii = 0; ii < chartDatas.TotalInData.InDatas.Count; ii++)
+        {
+            ary[ii] = chartDatas.TotalInData.InDatas[ii];
+        }
+        var aryOut = new decimal[chartDatas.TotalOutData.OutDatas.Count];
+        for (var ii = 0; ii < chartDatas.TotalOutData.OutDatas.Count; ii++)
+        {
+            aryOut[ii] = chartDatas.TotalOutData.OutDatas[ii];
+        }
+        LineDataset<decimal> datasetIn = new LineDataset<decimal>(ary);
+        LineDataset<decimal> datasetOut = new LineDataset<decimal>(aryOut);
+
+        datasetIn.BackgroundColor = ColorUtil.ColorHexString(75, 192, 192);
+        datasetIn.Label = chartDatas.TotalInData.Name;
+
+
+        datasetOut.BackgroundColor = ColorUtil.ColorHexString(255, 99, 132);
+        datasetOut.Label = chartDatas.TotalOutData.Name;
+
+        _configLine.Data.Datasets.Clear();
+
+        _configLine.Data.Datasets.Add(datasetIn);
+        _configLine.Data.Datasets.Add(datasetOut);
+
+        showChart = true;
+    }
+
 
 #line default
 #line hidden
