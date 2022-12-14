@@ -1,4 +1,6 @@
-﻿using EFCore_Transaction.Models;
+﻿using EFCore_Transaction.Context;
+using EFCore_Transaction.Models;
+using Microsoft.EntityFrameworkCore;
 using Service_Transaction.Contracts;
 using Service_Transaction.DTO;
 using System;
@@ -12,9 +14,11 @@ namespace Service_Transaction.Services
     public class ChartRepository : IChartRepository
     {
         ITransactionRepository transactionService;
-        public ChartRepository(ITransactionRepository transactionService)
+        private readonly ApplicationDbContext appDbContext;
+        public ChartRepository(ApplicationDbContext appDbContext, ITransactionRepository transactionService)
         {
             this.transactionService = transactionService;
+            this.appDbContext = appDbContext;
         }
 
 
@@ -101,6 +105,36 @@ namespace Service_Transaction.Services
                 totalInData.InDatas.Add(rd.TotalIn);
                 totalOutData.OutDatas.Add(rd.TotalOut);
             }
+
+            return chartData;
+        }
+
+        public async Task<UserMonthTotalInOutData> GetUser_MonthWise_Total_InOut_ChartReport(int userId, int monthNumber)
+        {
+            UserMonthTotalInOutData chartData = new UserMonthTotalInOutData();
+            chartData.MonthNumber = monthNumber;
+            chartData.MonthName = "";
+            chartData.TotalIn = 0;
+            chartData.TotalOut = 0;
+            chartData.UserName = "N/A";
+
+            var user = await appDbContext.Users.Include(x => x.Accounts)
+                         .ThenInclude(ac => ac.Transactions)
+                         .Where(x => x.UserId == userId).FirstOrDefaultAsync();
+
+            if (user != null)
+            {
+                chartData.UserName = user.UserName;
+                foreach (var account in user.Accounts)
+                {
+                    var trs = account.Transactions.Where(x => x.TransactionDate.Month == monthNumber && x.TransactionStatus==(int)TransactionStatus.SUCCESS);
+                    if(trs!=null && trs.Count()>0)
+                    {
+                        chartData.TotalIn += trs.Where(y => y.TransactionType == (int)TransactionType.IN).Sum(z => z.TransactionAmount);
+                        chartData.TotalOut += trs.Where(y => y.TransactionType == (int)TransactionType.OUT).Sum(z => z.TransactionAmount);
+                    }                 
+                }
+            }         
 
             return chartData;
         }
