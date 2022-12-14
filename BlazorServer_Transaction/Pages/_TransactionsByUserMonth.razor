@@ -27,16 +27,48 @@
         font-size: x-large;
         font-weight: bold;
     }
+    .userInfo{
+        color : blue;
+        font-size: larger;
+        font-weight: bold;
+    }
 </style>
 
 
 <h1>Transactions By User-Month!</h1>
-
+<p></p>
 @if (showChart)
 {
     <div class="container">
         <MudGrid>
-            <MudItem lg="6" md="12" sm="12" xs="12">
+            <MudItem lg="3" md="12" sm="12" xs="12">
+                <MudPaper>
+                    @if (selectedUser != null && selectedMonth != null)
+                    {
+                        <MudCard>
+                            <MudCardContent>
+                                <div class="userInfo">
+                                    User : @selectedUser.UserName
+                                    <p></p>
+                                    Month : @selectedMonth.MonthName
+                                </div>                             
+                            </MudCardContent>
+                        </MudCard>
+                    }
+                    else
+                    {
+                        <MudCard>
+                            <MudCardContent>
+                                <div class="noData">
+                                    No Content
+                                </div>                              
+                            </MudCardContent>
+                        </MudCard>
+                    }
+
+                </MudPaper>
+            </MudItem>
+            <MudItem lg="9" md="12" sm="12" xs="12">
                 <ChartJs.Blazor.Chart Config="_configPie"></ChartJs.Blazor.Chart>
             </MudItem>
         </MudGrid>
@@ -55,6 +87,17 @@
                 @foreach (var data in users)
                 {
                     <MudSelectItem Value="@data">@data.UserName</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="3">
+            <MudSelect @bind-Value="selectedMonth"
+                       AnchorOrigin="Origin.BottomCenter"
+                       HelperText="Select - Month"
+                       AdornmentColor="Color.Primary">
+                @foreach (var data in months)
+                {
+                    <MudSelectItem Value="@data">@data.MonthName</MudSelectItem>
                 }
             </MudSelect>
         </MudItem>
@@ -125,9 +168,13 @@
 @code{
     private bool showChart = false;
 
-    // select list
+    // select list user
     private List<UserList> users = new List<UserList>();
     private UserList selectedUser = new UserList();
+
+    // select list month
+    private List<Month> months = new List<Month>();
+    private Month selectedMonth = new Month();
 
 
     public Array transactionTypes = Enum.GetValues(typeof(TransactionType));
@@ -167,16 +214,19 @@
     {
         transactions = await transactionService.GetTransactionsByUser(selectedUser.UserId);
 
-        pieChartData = await chartService.GetUser_MonthWise_Total_InOut_ChartReport(selectedUser.UserId, 12);
+        pieChartData = await chartService.GetUser_MonthWise_Total_InOut_ChartReport(selectedUser.UserId, selectedMonth);
 
-        // chartjs.mudblazor chart
+        // chartjs.mudblazor chart        
         CreateChartJsBlazorPieChart();
     }
 
 
     protected override async Task OnInitializedAsync()
     {
-        users = await userService.GetUserList();
+        months = chartService.GetMonths();
+
+        users = await userService.GetUserList();     
+
         transactions = await transactionService.GetTransactionsByUser(0);
 
         // chartjs.mudblazor
@@ -187,22 +237,23 @@
     private int Index = -1;
 
     // chartjs.mudblazor
-    private PieConfig _configPie;  
+    private PieConfig _configPie;
 
     // pie chart
     private void initChartJsMudBlazorPieChart()
     {
         _configPie = new PieConfig();
+
         _configPie.Options = new PieOptions
         {
             Responsive = true,
             Title = new OptionsTitle
             {
                 Display = true,
-                Text = "Monthly $In v/s $Out"
+                Text = "$In v/s $Out"
             }
         };
-        foreach (string labels in new[] { "Total IN-$", "Total OUT-$"})
+        foreach (string labels in new[] { "Total IN-$", "Total OUT-$" })
         {
             _configPie.Data.Labels.Add(labels);
         }

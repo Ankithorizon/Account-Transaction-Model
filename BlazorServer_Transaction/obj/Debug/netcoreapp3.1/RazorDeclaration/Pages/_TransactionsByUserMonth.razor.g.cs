@@ -182,13 +182,17 @@ using ChartJs.Blazor.PieChart;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 125 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUserMonth.razor"
+#line 168 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUserMonth.razor"
       
     private bool showChart = false;
 
-    // select list
+    // select list user
     private List<UserList> users = new List<UserList>();
     private UserList selectedUser = new UserList();
+
+    // select list month
+    private List<Month> months = new List<Month>();
+    private Month selectedMonth = new Month();
 
 
     public Array transactionTypes = Enum.GetValues(typeof(TransactionType));
@@ -228,16 +232,19 @@ using ChartJs.Blazor.PieChart;
     {
         transactions = await transactionService.GetTransactionsByUser(selectedUser.UserId);
 
-        pieChartData = await chartService.GetUser_MonthWise_Total_InOut_ChartReport(selectedUser.UserId, 12);
+        pieChartData = await chartService.GetUser_MonthWise_Total_InOut_ChartReport(selectedUser.UserId, selectedMonth);
 
-        // chartjs.mudblazor chart
+        // chartjs.mudblazor chart        
         CreateChartJsBlazorPieChart();
     }
 
 
     protected override async Task OnInitializedAsync()
     {
-        users = await userService.GetUserList();
+        months = chartService.GetMonths();
+
+        users = await userService.GetUserList();     
+
         transactions = await transactionService.GetTransactionsByUser(0);
 
         // chartjs.mudblazor
@@ -248,22 +255,23 @@ using ChartJs.Blazor.PieChart;
     private int Index = -1;
 
     // chartjs.mudblazor
-    private PieConfig _configPie;  
+    private PieConfig _configPie;
 
     // pie chart
     private void initChartJsMudBlazorPieChart()
     {
         _configPie = new PieConfig();
+
         _configPie.Options = new PieOptions
         {
             Responsive = true,
             Title = new OptionsTitle
             {
                 Display = true,
-                Text = "Monthly $In v/s $Out"
+                Text = "$In v/s $Out"
             }
         };
-        foreach (string labels in new[] { "Total IN-$", "Total OUT-$"})
+        foreach (string labels in new[] { "Total IN-$", "Total OUT-$" })
         {
             _configPie.Data.Labels.Add(labels);
         }

@@ -20,8 +20,6 @@ namespace Service_Transaction.Services
             this.transactionService = transactionService;
             this.appDbContext = appDbContext;
         }
-
-
         public async Task<MonthlyTotalInOutChartData> GetMonthly_Total_InOut_ChartReport(int userId)
         {
             List<MonthlyTotalInOut> returnData = new List<MonthlyTotalInOut>();
@@ -108,14 +106,11 @@ namespace Service_Transaction.Services
 
             return chartData;
         }
-
-        public async Task<UserMonthTotalInOutData> GetUser_MonthWise_Total_InOut_ChartReport(int userId, int monthNumber)
+        public async Task<UserMonthTotalInOutData> GetUser_MonthWise_Total_InOut_ChartReport(int userId, Month month)
         {
-            monthNumber = 12;
-
             UserMonthTotalInOutData chartData = new UserMonthTotalInOutData();
-            chartData.MonthNumber = monthNumber;
-            chartData.MonthName = "";
+            chartData.MonthNumber = month.MonthNumber;
+            chartData.MonthName = month.MonthName;
             chartData.TotalIn = 0;
             chartData.TotalOut = 0;
             chartData.UserName = "N/A";
@@ -129,7 +124,7 @@ namespace Service_Transaction.Services
                 chartData.UserName = user.UserName;
                 foreach (var account in user.Accounts)
                 {
-                    var trs = account.Transactions.Where(x => x.TransactionDate.Month == monthNumber && x.TransactionStatus==(int)TransactionStatus.SUCCESS);
+                    var trs = account.Transactions.Where(x => x.TransactionDate.Month == month.MonthNumber && x.TransactionStatus==(int)TransactionStatus.SUCCESS);
                     if(trs!=null && trs.Count()>0)
                     {
                         chartData.TotalIn += trs.Where(y => y.TransactionType == (int)TransactionType.IN).Sum(z => z.TransactionAmount);
@@ -140,5 +135,83 @@ namespace Service_Transaction.Services
 
             return chartData;
         }
+        public List<Month> GetMonths()
+        {
+            List<Month> months = new List<Month>();
+            months.Add(new Month()
+            {
+                MonthNumber = 1,
+                MonthName = "January"
+            });
+
+            months.Add(new Month()
+            {
+                MonthNumber = 2,
+                MonthName = "February"
+            });
+
+            months.Add(new Month()
+            {
+                MonthNumber = 3,
+                MonthName = "March"
+            });
+
+            months.Add(new Month()
+            {
+                MonthNumber = 4,
+                MonthName = "April"
+            });
+
+            months.Add(new Month()
+            {
+                MonthNumber = 5,
+                MonthName = "May"
+            });
+
+            months.Add(new Month()
+            {
+                MonthNumber = 6,
+                MonthName = "June"
+            });
+
+            months.Add(new Month()
+            {
+                MonthNumber = 7,
+                MonthName = "July"
+            });
+
+            months.Add(new Month()
+            {
+                MonthNumber = 8,
+                MonthName = "August"
+            });
+
+            months.Add(new Month()
+            {
+                MonthNumber = 9,
+                MonthName = "September"
+            });
+
+            months.Add(new Month()
+            {
+                MonthNumber = 10,
+                MonthName = "October"
+            });
+
+            months.Add(new Month()
+            {
+                MonthNumber = 11,
+                MonthName = "November"
+            });
+
+            months.Add(new Month()
+            {
+                MonthNumber = 12,
+                MonthName = "December"
+            });
+
+            return months;
+        }
+
     }
 }
