@@ -175,8 +175,10 @@ using ChartJs.Blazor.BarChart;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 134 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
+#line 137 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionsByUser.razor"
        
+
+    private bool showChart = false;
 
     // select list
     private List<UserList> users = new List<UserList>();
@@ -215,36 +217,21 @@ using ChartJs.Blazor.BarChart;
 
         chartDatas = await chartService.GetMonthly_Total_InOut_ChartReport(selectedUser.UserId);
 
+        // mudblazor chart
         // CreateActualChart();
 
+        // chartjs.mudblazor chart
         CreateChartJsBlazorBarChart();
     }
 
 
     protected override async Task OnInitializedAsync()
     {
-        // chartjs.mudblazor
-        _config = new BarConfig
-        {
-            Options = new BarOptions
-            {
-                Responsive = true,
-                Title = new OptionsTitle
-                {
-                    Display = true,
-                    Text = "Bar Chart"
-                }
-            }
-        };
-        foreach (string month in new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" })
-        {
-            _config.Data.Labels.Add(month);
-        }
-
-
-
         users = await userService.GetUserList();
         transactions = await transactionService.GetTransactionsByUser(0);
+
+        // chartjs.mudblazor
+        initChartJsMudBlazorBarChart();
     }
 
 
@@ -257,8 +244,9 @@ using ChartJs.Blazor.BarChart;
 
     public string[] XAxisLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 
+    // mudblazor chart
     public List<ChartSeries> Series = new List<ChartSeries>()
-    {
+{
         new ChartSeries() { Name = InLabel, Data = new double[] { 90, 79, 72, 69, 62, 62, 55, 65, 70, 10, 10, 10 } },
         new ChartSeries() { Name = OutLabel, Data = new double[] { 10, 41, 35, 51, 49, 62, 69, 91, 148, 10, 10, 10 } },
     };
@@ -292,62 +280,89 @@ using ChartJs.Blazor.BarChart;
 
     // chartjs.mudblazor
     private BarConfig _config;
+    private void initChartJsMudBlazorBarChart()
+    {
+        _config = new BarConfig();
+        _config.Options = new BarOptions
+        {
+            Responsive = true,
+            Title = new OptionsTitle
+            {
+                Display = true,
+                Text = "Monthly $In v/s $Out"
+            }
+        };
+        foreach (string month in new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" })
+        {
+            _config.Data.Labels.Add(month);
+        }
+    }
     public void CreateChartJsBlazorBarChart()
     {
-        var ary = new double[chartDatas.TotalInData.InDatas.Count];
+
+        // var ary = new double[chartDatas.TotalInData.InDatas.Count];
+        var ary = new decimal[chartDatas.TotalInData.InDatas.Count];
         for (var ii = 0; ii < chartDatas.TotalInData.InDatas.Count; ii++)
         {
-            ary[ii] = Convert.ToDouble(chartDatas.TotalInData.InDatas[ii] / 1000);
+            // ary[ii] = Convert.ToDouble(chartDatas.TotalInData.InDatas[ii] / 1000);
+            // ary[ii] = Convert.ToDouble(chartDatas.TotalInData.InDatas[ii]);
+            ary[ii] = chartDatas.TotalInData.InDatas[ii];
         }
-        var aryOut = new double[chartDatas.TotalOutData.OutDatas.Count];
+        // var aryOut = new double[chartDatas.TotalOutData.OutDatas.Count];
+        var aryOut = new decimal[chartDatas.TotalOutData.OutDatas.Count];
         for (var ii = 0; ii < chartDatas.TotalOutData.OutDatas.Count; ii++)
         {
-            aryOut[ii] = Convert.ToDouble(chartDatas.TotalOutData.OutDatas[ii] / 1000);
+            // aryOut[ii] = Convert.ToDouble(chartDatas.TotalOutData.OutDatas[ii] / 1000);
+            // aryOut[ii] = Convert.ToDouble(chartDatas.TotalOutData.OutDatas[ii]);
+            aryOut[ii] = chartDatas.TotalOutData.OutDatas[ii];
         }
-        BarDataset<double> datasetIn = new BarDataset<double>(ary);
-        BarDataset<double> datasetOut = new BarDataset<double>(aryOut);
+        // BarDataset<double> datasetIn = new BarDataset<double>(ary);
+        // BarDataset<double> datasetOut = new BarDataset<double>(aryOut);
+        BarDataset<decimal> datasetIn = new BarDataset<decimal>(ary);
+        BarDataset<decimal> datasetOut = new BarDataset<decimal>(aryOut);
 
         datasetIn.BackgroundColor = new[]
         {
-            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
-            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
-            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
-            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
-            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
-            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
-            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
-            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
-            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
-            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
-            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
-            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
         };
-        datasetIn.Label = "IN $";
+        datasetIn.Label = chartDatas.TotalInData.Name;
 
 
         datasetOut.BackgroundColor = new[]
         {
-            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
-            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
-            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
-            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
-            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
-            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
-            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
-            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
-            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
-            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
-            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
-            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
         };
-        datasetOut.Label = "OUT $";
+        datasetOut.Label = chartDatas.TotalOutData.Name;
 
+        _config.Data.Datasets.Clear();
 
         _config.Data.Datasets.Add(datasetIn);
         _config.Data.Datasets.Add(datasetOut);
+
+        showChart = true;
     }
-
-
 
 #line default
 #line hidden

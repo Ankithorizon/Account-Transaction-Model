@@ -91,8 +91,8 @@ namespace Service_Transaction.Services
             chartData.TotalInData = totalInData;
             chartData.TotalOutData = totalOutData;
 
-            totalInData.Name = "IN $";
-            totalOutData.Name = "OUT $";
+            totalInData.Name = "$ IN";
+            totalOutData.Name = "$ OUT";
             totalInData.InDatas = new List<decimal>();
             totalOutData.OutDatas = new List<decimal>();
 
