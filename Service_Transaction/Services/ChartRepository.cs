@@ -111,6 +111,8 @@ namespace Service_Transaction.Services
 
         public async Task<UserMonthTotalInOutData> GetUser_MonthWise_Total_InOut_ChartReport(int userId, int monthNumber)
         {
+            monthNumber = 12;
+
             UserMonthTotalInOutData chartData = new UserMonthTotalInOutData();
             chartData.MonthNumber = monthNumber;
             chartData.MonthName = "";

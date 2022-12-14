@@ -99,3 +99,5 @@ C:\Transaction-Model\APITransaction\BlazorServer_Transaction\obj\Debug\netcoreap
 C:\Transaction-Model\APITransaction\BlazorServer_Transaction\obj\Debug\netcoreapp3.1\Razor\Pages\_TransactionsByUser.razor.g.cs
 C:\Transaction-Model\APITransaction\BlazorServer_Transaction\bin\Debug\netcoreapp3.1\libman.json
 C:\Transaction-Model\APITransaction\BlazorServer_Transaction\bin\Debug\netcoreapp3.1\ChartJs.Blazor.dll
+C:\Transaction-Model\APITransaction\BlazorServer_Transaction\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\_TransactionsByUserMonth.razor.g.cs
+C:\Transaction-Model\APITransaction\BlazorServer_Transaction\obj\Debug\netcoreapp3.1\Razor\Pages\_TransactionsByUserMonth.razor.g.cs
