@@ -25,6 +25,42 @@ namespace Service_Transaction.Services
             return await appDbContext.Transactions.OrderByDescending(x=>x.TransactionDate).ToListAsync();
         }
 
+        public async Task<List<TransactionDto>> Get_AllTransactions()
+        {
+            List<TransactionDto> transactions = new List<TransactionDto>();
+            var trs = appDbContext.Transactions
+                        .OrderByDescending(x => x.TransactionDate)
+                        .Include(x => x.Account);
+            if(trs!=null && trs.Count()>0)
+            {
+                foreach(var tr in trs)
+                {
+                    var payee = await appDbContext.Payees
+                                    .Where(x => x.PayeeId == tr.PayeeId).FirstOrDefaultAsync();
+                    if (payee != null)
+                    {
+                        transactions.Add(new TransactionDto()
+                        {
+                             Account = tr.Account.AccountId+" - "+ GetAccountTypeAsString(tr.Account.AccountType),
+                              AccountId = tr.AccountId,
+                               CurrentBalance = tr.CurrentBalance,
+                                LastBalance = tr.LastBalance,
+                                 Payee = payee.PayeeId+" - "+ GetPayeeTypeAsString(payee.PayeeType),
+                                  PayeeId = tr.PayeeId,
+                                   RefCode = tr.RefCode,
+                                    TransactionAmount = tr.TransactionAmount,
+                                     TransactionDate = tr.TransactionDate,
+                                      TransactionId = tr.TransactionId,
+                                       TransactionStatus = tr.TransactionStatus,
+                                        TransactionType = tr.TransactionType
+                        });
+                    }
+
+                }
+            }            
+            return transactions;
+        }
+
 
         public Transaction AddTransaction(Transaction transaction, AccountBalance accountBalance)
         {
@@ -112,5 +148,16 @@ namespace Service_Transaction.Services
 
             // return datas;
         }
+    
+    
+        private string GetPayeeTypeAsString(int payeeType)
+        {
+            return (PayeeType)payeeType+"";
+        }
+        private string GetAccountTypeAsString(int acType)
+        {
+            return (AccountType)acType + "";
+        }
+
     }
 }

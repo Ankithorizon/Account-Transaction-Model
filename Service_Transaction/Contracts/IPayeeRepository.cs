@@ -9,6 +9,7 @@ namespace Service_Transaction.Contracts
     public interface IPayeeRepository
     {
         Task<List<Payee>> GetAllPayees();
+        Task<string> GetPayeeType(int payeeId);
         Payee AddPayee(Payee payee);
         Payee GetPayee(int payeeId);
         List<string> GetAllPayeeTypes();

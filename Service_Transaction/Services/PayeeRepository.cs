@@ -25,6 +25,14 @@ namespace Service_Transaction.Services
             return await appDbContext.Payees.ToListAsync();
         }
 
+        public async Task<string> GetPayeeType(int payeeId)
+        {
+            var payee = await appDbContext.Payees
+                            .Where(x => x.PayeeId == payeeId).FirstOrDefaultAsync();
+
+            return payee.PayeeType + "";            
+        }
+
 
         public Payee AddPayee(Payee payee)
         {

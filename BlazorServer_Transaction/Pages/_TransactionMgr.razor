@@ -3,6 +3,7 @@
 @inject BlazorServer_Transaction.ApiCallHelpers.TransactionApiClient transactionApi
 <!-- service project connector -->
 @inject Service_Transaction.Contracts.ITransactionRepository transactionService
+@inject Service_Transaction.Contracts.IPayeeRepository payeeService
 @using EFCore_Transaction.Models
 @using Service_Transaction.DTO
 @inject MudBlazor.ISnackbar snackBar
@@ -83,9 +84,9 @@
 <p></p>
 
 
-<MudPaper Square="true" Class="d-flex justify-space-around">
+<!--<MudPaper Square="true" Class="d-flex justify-space-around">-->
     <!-- transactions -->
-    <MudTable Items="@transactions"
+    <!--<MudTable Items="@transactions"
               @ref="table"
               Breakpoint="Breakpoint.Sm"
               MultiSelection="true"
@@ -104,8 +105,46 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="TransactionId">@context.TransactionId</MudTd>
-            <MudTd DataLabel="PayeeId">@context.PayeeId</MudTd>
+            <MudTd DataLabel="Payee">@context.PayeeId</MudTd>
             <MudTd DataLabel="AccountId">@context.AccountId</MudTd>
+            <MudTd DataLabel="TransactionType">@GetTransactionType(context.TransactionType)</MudTd>
+            <MudTd DataLabel="TransactionAmount">@context.TransactionAmount</MudTd>
+            <MudTd DataLabel="TransactionStatus">@GetTransactionStatus(context.TransactionStatus)</MudTd>
+            <MudTd DataLabel="CurrentBalance">@context.CurrentBalance</MudTd>
+            <MudTd DataLabel="LastBalance">@context.LastBalance</MudTd>
+            <MudTd DataLabel="RefCode">@context.RefCode</MudTd>
+            <MudTd DataLabel="TransactionDate">@Convert.ToDateTime(@context.TransactionDate).ToString("dd, MMM yy")</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+</MudPaper>-->
+
+
+<MudPaper Square="true" Class="d-flex justify-space-around">
+    <!-- transactionDto -->
+    <MudTable Items="@transactions_"
+              @ref="table"
+              Breakpoint="Breakpoint.Sm"
+              MultiSelection="true"
+              Hover="@hover">
+        <HeaderContent>
+            <MudTh>#</MudTh>
+            <MudTh>Payee</MudTh>
+            <MudTh>Account</MudTh>
+            <MudTh>Type</MudTh>
+            <MudTh>Amount</MudTh>
+            <MudTh>Status</MudTh>
+            <MudTh>Current Balance</MudTh>
+            <MudTh>Last Balance</MudTh>
+            <MudTh>Ref-Code</MudTh>
+            <MudTh>Date</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="TransactionId">@context.TransactionId</MudTd>
+            <MudTd DataLabel="Payee">@context.Payee</MudTd>
+            <MudTd DataLabel="AccountId">@context.Account</MudTd>
             <MudTd DataLabel="TransactionType">@GetTransactionType(context.TransactionType)</MudTd>
             <MudTd DataLabel="TransactionAmount">@context.TransactionAmount</MudTd>
             <MudTd DataLabel="TransactionStatus">@GetTransactionStatus(context.TransactionStatus)</MudTd>
@@ -120,7 +159,6 @@
     </MudTable>
 </MudPaper>
 
-
 @code {
 
     public Array transactionTypes = Enum.GetValues(typeof(TransactionType));
@@ -131,7 +169,7 @@
     // very first load of table for transactions,,, displays number of rows
     // in table
     // @ref="table" code in table configuration
-    private MudTable<Transaction> table;
+    private MudTable<TransactionDto> table;
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
         table.SetRowsPerPage(50);
@@ -143,6 +181,7 @@
     private BKProcessResponse BKP_Response_CSVFile = new BKProcessResponse();
 
     private List<Transaction> transactions = new List<Transaction>();
+    private List<TransactionDto> transactions_ = new List<TransactionDto>();
 
     private string GetTransactionType(int trType)
     {
@@ -167,8 +206,9 @@
         // call to api-transaction-controller
         // this transaction-controller[api-worker-service-controller],,,
         // next uses transaction-repository[data-access-service] to access database
-        transactions = await transactionApi.GetTransactionsAsync();
-    }
+        // transactions = await transactionApi.GetTransactionsAsync();
 
+        transactions_ = await transactionService.Get_AllTransactions();
+    }
 }
 

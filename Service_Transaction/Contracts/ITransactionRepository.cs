@@ -10,6 +10,7 @@ namespace Service_Transaction.Contracts
     public interface ITransactionRepository
     {
         Task<List<Transaction>> GetAllTransactions();
+        Task<List<TransactionDto>> Get_AllTransactions();
         Transaction AddTransaction(Transaction transaction, AccountBalance accountBalance);
         Transaction GetTransaction(int transactionId);
         List<string> GetAllTransactionTypes();

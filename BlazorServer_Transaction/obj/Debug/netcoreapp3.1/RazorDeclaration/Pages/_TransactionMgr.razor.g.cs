@@ -146,14 +146,14 @@ using ChartJs.Blazor.Interop;
 #line hidden
 #nullable disable
 #nullable restore
-#line 6 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionMgr.razor"
+#line 7 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionMgr.razor"
 using EFCore_Transaction.Models;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 7 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionMgr.razor"
+#line 8 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionMgr.razor"
 using Service_Transaction.DTO;
 
 #line default
@@ -168,7 +168,7 @@ using Service_Transaction.DTO;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 124 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionMgr.razor"
+#line 162 "C:\Transaction-Model\APITransaction\BlazorServer_Transaction\Pages\_TransactionMgr.razor"
        
 
     public Array transactionTypes = Enum.GetValues(typeof(TransactionType));
@@ -179,7 +179,7 @@ using Service_Transaction.DTO;
     // very first load of table for transactions,,, displays number of rows
     // in table
     // @ref="table" code in table configuration
-    private MudTable<Transaction> table;
+    private MudTable<TransactionDto> table;
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
         table.SetRowsPerPage(50);
@@ -191,6 +191,7 @@ using Service_Transaction.DTO;
     private BKProcessResponse BKP_Response_CSVFile = new BKProcessResponse();
 
     private List<Transaction> transactions = new List<Transaction>();
+    private List<TransactionDto> transactions_ = new List<TransactionDto>();
 
     private string GetTransactionType(int trType)
     {
@@ -215,14 +216,16 @@ using Service_Transaction.DTO;
         // call to api-transaction-controller
         // this transaction-controller[api-worker-service-controller],,,
         // next uses transaction-repository[data-access-service] to access database
-        transactions = await transactionApi.GetTransactionsAsync();
-    }
+        // transactions = await transactionApi.GetTransactionsAsync();
 
+        transactions_ = await transactionService.Get_AllTransactions();
+    }
 
 #line default
 #line hidden
 #nullable disable
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private MudBlazor.ISnackbar snackBar { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private Service_Transaction.Contracts.IPayeeRepository payeeService { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private Service_Transaction.Contracts.ITransactionRepository transactionService { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private BlazorServer_Transaction.ApiCallHelpers.TransactionApiClient transactionApi { get; set; }
     }
