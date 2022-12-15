@@ -189,7 +189,8 @@ namespace APITransaction.Helpers
             Random random = new Random();
             TransactionType randomTransactionType = (TransactionType)values.GetValue(random.Next(values.Length));
             return randomTransactionType;
-        }
+        }   
+
         // TransactionAmount
         public decimal GetTransactionAmount()
         {

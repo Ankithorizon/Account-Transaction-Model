@@ -66,5 +66,17 @@ namespace Service_Transaction.Services
                 return 0;
 
         }
+
+        public Payee GetRandomPayee()
+        {
+            if (appDbContext.Payees != null && appDbContext.Payees.Count() > 0)
+            {
+                int num = random.Next(0, appDbContext.Payees.Count() - 1);
+                return appDbContext.Payees.ToList().ElementAtOrDefault(num);
+            }
+            else
+                return null;
+
+        }
     }
 }

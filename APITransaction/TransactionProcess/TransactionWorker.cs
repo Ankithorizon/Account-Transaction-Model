@@ -44,8 +44,23 @@ namespace APITransaction.TransactionProcess
                 try
                 {
                     Transaction transaction = new Transaction();
-                    transaction.PayeeId = payeeService.GetRandomPayeeId();
-                    transaction.TransactionType = (int)helper.GetTransactionType(); // IN, OUT
+                    Payee payee = payeeService.GetRandomPayee();
+
+                    // transaction.PayeeId = payeeService.GetRandomPayeeId();
+                    // transaction.TransactionType = (int)helper.GetTransactionType(); // IN, OUT
+                    transaction.PayeeId = payee.PayeeId;
+                    if (payee.PayeeType >= 12)
+                    {
+                        // IN
+                        transaction.TransactionType = (int)TransactionType.IN;
+                    }
+                    else
+                    {
+                        // OUT
+                        transaction.TransactionType = (int)TransactionType.OUT;
+                    }                   
+                    
+
                     transaction.TransactionAmount = helper.GetTransactionAmount();
                     transaction.TransactionDate = helper.GetTransactionDate();
 

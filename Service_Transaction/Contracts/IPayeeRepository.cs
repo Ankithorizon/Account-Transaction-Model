@@ -13,5 +13,6 @@ namespace Service_Transaction.Contracts
         Payee GetPayee(int payeeId);
         List<string> GetAllPayeeTypes();
         int GetRandomPayeeId();
+        Payee GetRandomPayee();
     }
 }
