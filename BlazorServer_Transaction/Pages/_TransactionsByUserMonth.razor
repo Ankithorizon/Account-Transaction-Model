@@ -42,6 +42,8 @@
     <div class="container">
         <MudGrid>
             <MudItem lg="3" md="12" sm="12" xs="12">
+            </MudItem>
+            <MudItem lg="6" md="12" sm="12" xs="12">
                 <MudPaper>
                     @if (selectedUser != null && selectedMonth != null)
                     {
@@ -51,7 +53,9 @@
                                     User : @selectedUser.UserName
                                     <p></p>
                                     Month : @selectedMonth.MonthName
-                                </div>                             
+                                </div>
+                                <p></p>
+                                <ChartJs.Blazor.Chart Config="_configPie"></ChartJs.Blazor.Chart>
                             </MudCardContent>
                         </MudCard>
                     }
@@ -61,15 +65,13 @@
                             <MudCardContent>
                                 <div class="noData">
                                     No Content
-                                </div>                              
+                                </div>
                             </MudCardContent>
                         </MudCard>
                     }
-
                 </MudPaper>
             </MudItem>
-            <MudItem lg="9" md="12" sm="12" xs="12">
-                <ChartJs.Blazor.Chart Config="_configPie"></ChartJs.Blazor.Chart>
+            <MudItem lg="3" md="12" sm="12" xs="12">
             </MudItem>
         </MudGrid>
     </div>
