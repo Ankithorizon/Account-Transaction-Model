@@ -11,5 +11,6 @@ namespace Service_Transaction.Contracts
         Task<MonthlyTotalInOutChartData> GetMonthly_Total_InOut_ChartReport(int userId);
         Task<UserMonthTotalInOutData> GetUser_MonthWise_Total_InOut_ChartReport(int userId, Month month);        
         List<Month> GetMonths();
+        Task<List<Payee_InOut>> GetPayee_InOut_ChartReport(int userId);
     }
 }

@@ -107,7 +107,7 @@ namespace Service_Transaction.Services
 
 
         // this one called by blazor server app directly using 
-        // transactions = await transactionService.GetTransactionsByUser(1);
+        // transactions = await transactionService.GetTransactionsByUser(userId);
         public async Task<List<Transaction>> GetTransactionsByUser(int userId)
         {            
             List<Transaction> datas = new List<Transaction>();

@@ -213,5 +213,54 @@ namespace Service_Transaction.Services
             return months;
         }
 
+        public async Task<List<Payee_InOut>> GetPayee_InOut_ChartReport(int userId)
+        {
+            List<Payee_InOut> reportData = new List<Payee_InOut>();
+
+            var user = await appDbContext.Users
+                            .Include(x => x.Accounts)
+                            .ThenInclude(x => x.Transactions)
+                            .Where(x => x.UserId == userId).FirstOrDefaultAsync();
+
+            if (user != null)
+            {
+                if(user.Accounts!=null && user.Accounts.Count() > 0)
+                {
+                    List<int> accountIds = new List<int>();
+                    foreach(var account in user.Accounts.ToList())
+                    {
+                        accountIds.Add(account.AccountId);
+                    }
+                    if (accountIds.Count() > 0)
+                    {
+                        var transactions = from t in appDbContext.Transactions
+                                           where t.TransactionStatus == (int)TransactionStatus.SUCCESS && accountIds.Contains(t.AccountId)
+                                           group t by new { t.PayeeId, t.TransactionType } into g
+                                           select new 
+                                           { 
+                                               PayeeId = g.Key.PayeeId, 
+                                               TransactionType = g.Key.TransactionType,
+                                               TotalIn = g.Key.TransactionType==(int)TransactionType.IN ? g.Sum(x=>x.TransactionAmount) : 0,
+                                               TotalOut = g.Key.TransactionType == (int)TransactionType.OUT ? g.Sum(x => x.TransactionAmount) : 0,
+                                               Trs = g.ToList() 
+                                           };
+                        if(transactions!=null && transactions.Count() > 0)
+                        {
+                            foreach(var tr in transactions)
+                            {
+                                reportData.Add(new Payee_InOut()
+                                {
+                                     Payee = tr.PayeeId+"",
+                                      TotalIn = tr.TotalIn,
+                                       TotalOut = tr.TotalOut
+                                });
+                            }
+                        }
+                    }
+                }
+             
+            }
+            return reportData;
+        }
     }
 }
