@@ -1,0 +1,276 @@
+﻿@page "/transactionsByUserPayee"
+<!-- web api connector -->
+@inject BlazorServer_Transaction.ApiCallHelpers.TransactionApiClient transactionApi
+<!-- service project connector -->
+@inject Service_Transaction.Contracts.ITransactionRepository transactionService
+@inject Service_Transaction.Contracts.IUserRepository userService
+@inject Service_Transaction.Contracts.IChartRepository chartService
+
+@using EFCore_Transaction.Models
+@using Service_Transaction.DTO
+@inject MudBlazor.ISnackbar snackBar
+
+@using ChartJs.Blazor.BarChart
+
+
+<style>
+    .filterDiv {
+        padding-top: 30px;
+    }
+
+    .filterBtn {
+        padding-top: 20px;
+    }
+
+    .noData {
+        color: red;
+        font-size: x-large;
+        font-weight: bold;
+    }
+</style>
+<h1>Transactions By User!</h1>
+
+@if (showChart)
+{
+<div class="container">
+    <MudGrid>
+        <MudItem lg="6" md="12" sm="12" xs="12">
+            <ChartJs.Blazor.Chart Config="_config"></ChartJs.Blazor.Chart>
+        </MudItem>       
+    </MudGrid>
+</div>  
+}
+
+<hr />
+<p></p>
+<div class="container filterDiv">
+    <MudGrid>
+        <MudItem xs="3">
+            <MudSelect @bind-Value="selectedUser"
+                       AnchorOrigin="Origin.BottomCenter"
+                       HelperText="Select - User"
+                       AdornmentColor="Color.Secondary">
+                @foreach (var data in users)
+                {
+                    <MudSelectItem Value="@data">@data.UserName</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="3">
+            <div class="filterBtn">
+                <MudButton Variant="Variant.Filled"
+                           @onclick="@( (x) => SetTransactionsForSelectedUser(selectedUser))"
+                           StartIcon="@Icons.Material.Filled.BarChart"
+                           Color="Color.Success">Get Transactions!</MudButton>
+            </div>
+        </MudItem>
+    </MudGrid>
+</div>
+<p></p>
+<MudPaper Square="true" Class="d-flex justify-space-around">
+    <!-- transactions -->
+    @if (transactions != null && transactions.Count() > 0)
+    {
+        <MudTable Items="@transactions"
+                  @ref="table"
+                  Breakpoint="Breakpoint.Sm"
+                  MultiSelection="true"
+                  Hover="@hover">
+            <HeaderContent>
+                <MudTh>#</MudTh>
+                <MudTh>Payee</MudTh>
+                <MudTh>Account</MudTh>
+                <MudTh>Type</MudTh>
+                <MudTh>Amount</MudTh>
+                <MudTh>Status</MudTh>
+                <MudTh>Current Balance</MudTh>
+                <MudTh>Last Balance</MudTh>
+                <MudTh>Ref-Code</MudTh>
+                <MudTh>Date</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="TransactionId">@context.TransactionId</MudTd>
+                <MudTd DataLabel="PayeeId">@context.PayeeId</MudTd>
+                <MudTd DataLabel="AccountId">@context.AccountId</MudTd>
+                <MudTd DataLabel="TransactionType">@GetTransactionType(context.TransactionType)</MudTd>
+                <MudTd DataLabel="TransactionAmount">@context.TransactionAmount</MudTd>
+                <MudTd DataLabel="TransactionStatus">@GetTransactionStatus(context.TransactionStatus)</MudTd>
+                <MudTd DataLabel="CurrentBalance">@context.CurrentBalance</MudTd>
+                <MudTd DataLabel="LastBalance">@context.LastBalance</MudTd>
+                <MudTd DataLabel="RefCode">@context.RefCode</MudTd>
+                <MudTd DataLabel="TransactionDate">@Convert.ToDateTime(@context.TransactionDate).ToString("dd, MMM yy")</MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager PageSizeOptions="new int[] { 50, 100 }" />
+            </PagerContent>
+        </MudTable>
+    }
+    else
+    {
+        <MudPaper>
+            <MudCard>
+                <MudCardContent>
+                    <span class="noData">
+                        Transactions Not Available!
+                    </span>
+                </MudCardContent>
+            </MudCard>
+        </MudPaper>
+    }
+
+</MudPaper>
+
+
+@code {
+
+    private bool showChart = false;
+
+    // select list
+    private List<UserList> users = new List<UserList>();
+    private UserList selectedUser = new UserList();
+
+    public Array transactionTypes = Enum.GetValues(typeof(TransactionType));
+    public Array transactionStatus = Enum.GetValues(typeof(TransactionStatus));
+
+    private bool hover = true;
+
+    // very first load of table for transactions,,, displays number of rows
+    // in table
+    // @ref="table" code in table configuration
+    private MudTable<Transaction> table = new MudTable<Transaction>();
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (transactions != null && transactions.Count() > 0)
+        {
+            table.SetRowsPerPage(50);
+            return base.OnAfterRenderAsync(firstRender);
+        }
+        else
+        {
+            return base.OnAfterRenderAsync(firstRender);
+        }
+    }
+
+    private List<Transaction> transactions = new List<Transaction>();
+   
+    private string GetTransactionType(int trType)
+    {
+        return transactionTypes.GetValue(trType).ToString();
+    }
+    private string GetTransactionStatus(int trStatus)
+    {
+        return transactionStatus.GetValue(trStatus).ToString();
+    }
+
+    private async Task SetTransactionsForSelectedUser(UserList selectedUser)
+    {
+        transactions = await transactionService.GetTransactionsByUser(selectedUser.UserId);
+
+        chartDatas = await chartService.GetPayee_InOut_ChartReport(selectedUser.UserId);
+
+        // chartjs.mudblazor chart
+        CreateChartJsBlazorBarChart();
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await userService.GetUserList();
+        transactions = await transactionService.GetTransactionsByUser(0);
+
+        // chartjs.mudblazor
+        initChartJsMudBlazorBarChart();
+    }
+
+
+    // chart-data
+    // List<Payee_InOut>
+    private List<Payee_InOut> chartDatas;
+    private int Index = -1;
+
+    // chartjs.mudblazor
+    private BarConfig _config;
+    // bar chart
+    private void initChartJsMudBlazorBarChart()
+    {
+        _config = new BarConfig();
+        _config.Options = new BarOptions
+        {
+            Responsive = true,
+            Title = new OptionsTitle
+            {
+                Display = true,
+                Text = "Payee $In v/s $Out"
+            }
+        };
+        foreach (string month in new[] { "P1", "P2", "P3"})
+        {
+            _config.Data.Labels.Add(month);
+        }
+    }
+    public void CreateChartJsBlazorBarChart()
+    {
+        _config.Data.Labels.Clear();
+        foreach (var payee in chartDatas)
+        {
+            _config.Data.Labels.Add(payee.Payee);
+        }
+
+
+        var ary = new decimal[chartDatas.Count];
+        for (var ii = 0; ii < chartDatas.Count; ii++)
+        {
+            ary[ii] = chartDatas[ii].TotalIn;
+        }
+        var aryOut = new decimal[chartDatas.Count];
+        for (var ii = 0; ii < chartDatas.Count; ii++)
+        {
+            aryOut[ii] = chartDatas[ii].TotalOut;
+        }
+        BarDataset<decimal> datasetIn = new BarDataset<decimal>(ary);
+        BarDataset<decimal> datasetOut = new BarDataset<decimal>(aryOut);
+
+        datasetIn.BackgroundColor = new[]
+        {
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+        };
+        datasetIn.Label = "$IN$";
+
+
+        datasetOut.BackgroundColor = new[]
+        {
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+        };
+        datasetOut.Label = "$OUT$";
+
+        _config.Data.Datasets.Clear();
+
+        _config.Data.Datasets.Add(datasetIn);
+        _config.Data.Datasets.Add(datasetOut);
+
+        showChart = true;
+    }
+}
+

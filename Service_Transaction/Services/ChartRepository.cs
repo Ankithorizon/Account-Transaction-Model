@@ -13,10 +13,12 @@ namespace Service_Transaction.Services
 {
     public class ChartRepository : IChartRepository
     {
+        IPayeeRepository payeeService;
         ITransactionRepository transactionService;
         private readonly ApplicationDbContext appDbContext;
-        public ChartRepository(ApplicationDbContext appDbContext, ITransactionRepository transactionService)
+        public ChartRepository(ApplicationDbContext appDbContext, ITransactionRepository transactionService, IPayeeRepository payeeService)
         {
+            this.payeeService = payeeService;
             this.transactionService = transactionService;
             this.appDbContext = appDbContext;
         }
@@ -213,6 +215,11 @@ namespace Service_Transaction.Services
             return months;
         }
 
+        //      select PayeeId, TransactionType, sum(TransactionAmount)
+        //      -- select PayeeId, TransactionType
+        //      from Transactions
+        //      where AccountId in (61,70,75,80,88) and TransactionStatus=0
+        //      group by PayeeId,TransactionType
         public async Task<List<Payee_InOut>> GetPayee_InOut_ChartReport(int userId)
         {
             List<Payee_InOut> reportData = new List<Payee_InOut>();
@@ -222,43 +229,65 @@ namespace Service_Transaction.Services
                             .ThenInclude(x => x.Transactions)
                             .Where(x => x.UserId == userId).FirstOrDefaultAsync();
 
-            if (user != null)
+            List<int> accountIds = new List<int>();
+            foreach (var account in user.Accounts.ToList())
             {
-                if(user.Accounts!=null && user.Accounts.Count() > 0)
+                accountIds.Add(account.AccountId);
+            }
+
+            var transactions = appDbContext.Transactions                
+                                    .Where(x => x.TransactionStatus == (int)TransactionStatus.SUCCESS && x.Account.UserId==userId).ToList();
+
+
+            // ok
+            //IEnumerable<IGrouping<int, Transaction>> groupByQS = (from tr in transactions
+            //                                                     group tr by tr.PayeeId);
+            //foreach(var trp in groupByQS)
+            //{
+            //    Payee_InOut data = new Payee_InOut();
+            //    data.Payee = trp.Key + "";
+            //    decimal totalIn = 0;
+            //    decimal totalOut = 0;
+            //    foreach (var tr in trp)
+            //    {
+            //        if (tr.TransactionType == (int)TransactionType.IN)
+            //        {
+            //            totalIn += tr.TransactionAmount;
+            //        }
+            //        else
+            //        {
+            //            totalOut += tr.TransactionAmount;
+            //        }
+            //    }
+            //    data.TotalIn = totalIn;
+            //    data.TotalOut = totalOut;
+
+            //    reportData.Add(data);
+            //}
+
+            var groupByPayee = transactions.GroupBy(tr => tr.PayeeId);
+            foreach (var trp in groupByPayee)
+            {
+                Payee_InOut data = new Payee_InOut();
+                // data.Payee = trp.Key + "";
+                data.Payee = trp.Key+"-"+(PayeeType)payeeService.GetPayee(trp.Key).PayeeType;
+                decimal totalIn = 0;
+                decimal totalOut = 0;
+                foreach (var tr in trp)
                 {
-                    List<int> accountIds = new List<int>();
-                    foreach(var account in user.Accounts.ToList())
+                    if (tr.TransactionType == (int)TransactionType.IN)
                     {
-                        accountIds.Add(account.AccountId);
+                        totalIn += tr.TransactionAmount;
                     }
-                    if (accountIds.Count() > 0)
+                    else
                     {
-                        var transactions = from t in appDbContext.Transactions
-                                           where t.TransactionStatus == (int)TransactionStatus.SUCCESS && accountIds.Contains(t.AccountId)
-                                           group t by new { t.PayeeId, t.TransactionType } into g
-                                           select new 
-                                           { 
-                                               PayeeId = g.Key.PayeeId, 
-                                               TransactionType = g.Key.TransactionType,
-                                               TotalIn = g.Key.TransactionType==(int)TransactionType.IN ? g.Sum(x=>x.TransactionAmount) : 0,
-                                               TotalOut = g.Key.TransactionType == (int)TransactionType.OUT ? g.Sum(x => x.TransactionAmount) : 0,
-                                               Trs = g.ToList() 
-                                           };
-                        if(transactions!=null && transactions.Count() > 0)
-                        {
-                            foreach(var tr in transactions)
-                            {
-                                reportData.Add(new Payee_InOut()
-                                {
-                                     Payee = tr.PayeeId+"",
-                                      TotalIn = tr.TotalIn,
-                                       TotalOut = tr.TotalOut
-                                });
-                            }
-                        }
+                        totalOut += tr.TransactionAmount;
                     }
                 }
-             
+                data.TotalIn = totalIn;
+                data.TotalOut = totalOut;
+
+                reportData.Add(data);
             }
             return reportData;
         }
