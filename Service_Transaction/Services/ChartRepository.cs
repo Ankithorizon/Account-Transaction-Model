@@ -269,8 +269,9 @@ namespace Service_Transaction.Services
             foreach (var trp in groupByPayee)
             {
                 Payee_InOut data = new Payee_InOut();
-                // data.Payee = trp.Key + "";
-                data.Payee = trp.Key+"-"+(PayeeType)payeeService.GetPayee(trp.Key).PayeeType;
+                var payee = payeeService.GetPayee(trp.Key);
+                data.PayeeType = (int)payee.PayeeType;
+                data.Payee = trp.Key+"-"+(PayeeType)payee.PayeeType;
                 decimal totalIn = 0;
                 decimal totalOut = 0;
                 foreach (var tr in trp)
@@ -289,7 +290,33 @@ namespace Service_Transaction.Services
 
                 reportData.Add(data);
             }
-            return reportData;
+
+            // this will add-up payees,,, those have no transactions yet!
+            List<Payee_InOut> datas = new List<Payee_InOut>();
+            foreach (int p in Enum.GetValues(typeof(PayeeType)))
+            {
+                var rd = reportData.Where(x => x.PayeeType == p).FirstOrDefault();
+                if (rd == null)
+                {
+                    // this payee has no transactions yet!
+                    Payee_InOut data = new Payee_InOut();
+                    data.PayeeType = p;
+                    data.Payee = (PayeeType)p + "";
+                    data.TotalIn = 0;
+                    data.TotalOut = 0;
+
+                    datas.Add(data);
+                }
+                else
+                {
+                    // this payee has transactions and already calculated
+                    // totalin & totalout
+                    datas.Add(rd);
+                }
+            }
+
+            return datas;
+            // return reportData;
         }
     }
 }

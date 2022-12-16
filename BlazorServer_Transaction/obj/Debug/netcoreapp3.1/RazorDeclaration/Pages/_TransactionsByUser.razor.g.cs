@@ -243,6 +243,8 @@ using ChartJs.Blazor.LineChart;
     protected override async Task OnInitializedAsync()
     {
         users = await userService.GetUserList();
+        users = new List<UserList>(users.Where(x => x.UserId != 0)).ToList();
+
         transactions = await transactionService.GetTransactionsByUser(0);
 
         // chartjs.mudblazor

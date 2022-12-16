@@ -207,7 +207,7 @@ using ChartJs.Blazor.BarChart;
     }
 
     private List<Transaction> transactions = new List<Transaction>();
-   
+
     private string GetTransactionType(int trType)
     {
         return transactionTypes.GetValue(trType).ToString();
@@ -231,6 +231,8 @@ using ChartJs.Blazor.BarChart;
     protected override async Task OnInitializedAsync()
     {
         users = await userService.GetUserList();
+        users = new List<UserList>(users.Where(x => x.UserId != 0)).ToList();
+
         transactions = await transactionService.GetTransactionsByUser(0);
 
         // chartjs.mudblazor
@@ -299,12 +301,30 @@ using ChartJs.Blazor.BarChart;
             ColorUtil.ColorHexString(75, 192, 192),
             ColorUtil.ColorHexString(75, 192, 192),
             ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
+            ColorUtil.ColorHexString(75, 192, 192),
         };
         datasetIn.Label = "$IN$";
 
 
         datasetOut.BackgroundColor = new[]
         {
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
+            ColorUtil.ColorHexString(255, 99, 132),
             ColorUtil.ColorHexString(255, 99, 132),
             ColorUtil.ColorHexString(255, 99, 132),
             ColorUtil.ColorHexString(255, 99, 132),

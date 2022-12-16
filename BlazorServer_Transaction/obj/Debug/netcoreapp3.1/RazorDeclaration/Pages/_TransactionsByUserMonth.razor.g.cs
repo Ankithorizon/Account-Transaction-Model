@@ -243,7 +243,8 @@ using ChartJs.Blazor.PieChart;
     {
         months = chartService.GetMonths();
 
-        users = await userService.GetUserList();     
+        users = await userService.GetUserList();
+        users = new List<UserList>(users.Where(x => x.UserId != 0)).ToList();
 
         transactions = await transactionService.GetTransactionsByUser(0);
 
